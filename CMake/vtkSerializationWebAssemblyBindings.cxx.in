@@ -210,7 +210,9 @@ EMSCRIPTEN_BINDINGS(bindings)
     .function("setDeserializerLogVerbosity", &vtkRemoteSession::SetDeserializerLogVerbosity)
     .function("setInvokerLogVerbosity", &vtkRemoteSession::SetInvokerLogVerbosity)
     .function("setObjectManagerLogVerbosity", &vtkRemoteSession::SetObjectManagerLogVerbosity)
-    .function("setSerializerLogVerbosity", &vtkRemoteSession::SetSerializerLogVerbosity);
+    .function("setSerializerLogVerbosity", &vtkRemoteSession::SetSerializerLogVerbosity)
+    .function("startWebXR", &vtkRemoteSession::StartWebXR)
+    .function("stopWebXR", &vtkRemoteSession::StopWebXR);
 }
 
 VTK_ABI_NAMESPACE_END

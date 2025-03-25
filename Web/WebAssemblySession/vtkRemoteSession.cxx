@@ -204,6 +204,19 @@ bool vtkRemoteSession::ResetCamera(vtkTypeUInt32 object)
   return vtkSessionResetCamera(this->Session, object) == vtkSessionResultSuccess;
 }
 
+//------------------------------------------------------------------------------
+bool vtkRemoteSession::StartWebXR(
+  vtkTypeUInt8 mode, vtkTypeUInt32 requiredFeatures, vtkTypeUInt32 optionalFeatures)
+{
+  return vtkSessionStartWebXR(mode, requiredFeatures, optionalFeatures) == vtkSessionResultSuccess;
+}
+
+//------------------------------------------------------------------------------
+bool vtkRemoteSession::StopWebXR()
+{
+  return vtkSessionStopWebXR() == vtkSessionResultSuccess;
+}
+
 //-------------------------------------------------------------------------------
 bool vtkRemoteSession::StartEventLoop(vtkTypeUInt32 object)
 {

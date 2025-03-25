@@ -169,6 +169,20 @@ public:
   bool ResetCamera(vtkTypeUInt32 object);
 
   /**
+   * @brief Start WebXR Session
+   * @param mode 0: inline, 1: VR or 2: AR
+   * @param requiredFeatures Required session features (bitmask of WEBXR_SESSION_FEATURE_*)
+   * @param optionalFeatures Optional session features (bitmask of WEBXR_SESSION_FEATURE_*)
+   */
+  bool StartWebXR(
+    vtkTypeUInt8 mode, vtkTypeUInt32 requiredFeatures, vtkTypeUInt32 optionalFeatures);
+
+  /**
+   * @brief Stop the current WebXR Session
+   */
+  bool StopWebXR();
+
+  /**
    * @brief Starts an event loop for a VTK object.
    * @param object The handle of the VTK object.
    * @return True if the event loop was successfully started, false otherwise.

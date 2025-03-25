@@ -151,6 +151,8 @@ typedef struct vtkSessionDescriptor
 #define vtkSessionSetSize VTK_ABI_NAMESPACE_MANGLE(vtkSessionSetSize)
 #define vtkSessionRender VTK_ABI_NAMESPACE_MANGLE(vtkSessionRender)
 #define vtkSessionResetCamera VTK_ABI_NAMESPACE_MANGLE(vtkSessionResetCamera)
+#define vtkSessionStartWebXR VTK_ABI_NAMESPACE_MANGLE(vtkSessionStartWebXR)
+#define vtkSessionStopWebXR VTK_ABI_NAMESPACE_MANGLE(vtkSessionStopWebXR)
 #define vtkSessionStartEventLoop VTK_ABI_NAMESPACE_MANGLE(vtkSessionStartEventLoop)
 #define vtkSessionStopEventLoop VTK_ABI_NAMESPACE_MANGLE(vtkSessionStopEventLoop)
 #define vtkSessionAddObserver VTK_ABI_NAMESPACE_MANGLE(vtkSessionAddObserver)
@@ -449,6 +451,28 @@ extern "C"
    */
   VTKSERIALIZATIONMANAGER_EXPORT vtkSessionResult vtkSessionResetCamera(
     vtkSession session, vtkObjectHandle object);
+
+  /**
+   * Start the WebXR session
+   * @param mode The session mode. 0 for inline, 1 for VR or 2 for AR
+   * @param requiredFeatures Bitflags of WebXR features to request. If at least one feature is not
+   * available, the session will fail. Values are: Local: 1 Local floor: 2 Bounded floor: 4
+   * Unbounded: 8
+   * Hit test: 16
+   * @param optionalFeatures same as requiredFeatures, but will not fail if some features are not
+   * available.
+   * @return A vtkSessionResult indicating success or failure.
+   * @note This will fail if VTK was not compiled with the RenderingWebXR module
+   */
+  VTKSERIALIZATIONMANAGER_EXPORT vtkSessionResult vtkSessionStartWebXR(
+    uint8_t mode, uint32_t requiredFeatures, uint32_t optionalFeatures);
+
+  /**
+   * Stop the WebXR session
+   * @return A vtkSessionResult indicating success or failure.
+   * @note This will fail if VTK was not compiled with the RenderingWebXR module
+   */
+  VTKSERIALIZATIONMANAGER_EXPORT vtkSessionResult vtkSessionStopWebXR();
 
   /**
    * Start the event loop for the render window interactor.

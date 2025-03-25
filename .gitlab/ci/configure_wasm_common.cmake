@@ -44,7 +44,6 @@ set(VTK_MODULE_ENABLE_VTK_RenderingOpenXR NO CACHE STRING "") # no openxr
 set(VTK_MODULE_ENABLE_VTK_RenderingQt NO CACHE STRING "") # no qt
 set(VTK_MODULE_ENABLE_VTK_RenderingRayTracing NO CACHE STRING "") # no ospray or visrtx
 set(VTK_MODULE_ENABLE_VTK_RenderingTk NO CACHE STRING "") # no tk
-set(VTK_MODULE_ENABLE_VTK_RenderingVR NO CACHE STRING "") # gl code incompatible with gles 3.0
 set(VTK_MODULE_ENABLE_VTK_RenderingZSpace NO CACHE STRING "") # no zspace
 # ├── ThirdParty
 set(VTK_MODULE_ENABLE_VTK_fides NO CACHE STRING "") # no adios2
