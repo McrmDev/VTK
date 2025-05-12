@@ -22,4 +22,6 @@ DEPENDS
 PRIVATE_DEPENDS
   VTK::jsoncpp
 TEST_DEPENDS
+  VTK::TestingCore
+  VTK::TestingRendering
 INCLUDE_MARSHAL
