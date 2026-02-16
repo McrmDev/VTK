@@ -60,6 +60,7 @@ set(test_sources
   TestHyperTreeGridExtractGhostCells.cxx,NO_VALID,NO_OUTPUT
   TestHyperTreeGridGenerateFields.cxx,NO_VALID,NO_OUTPUT
   TestHyperTreeGridGeometryPassCellIds.cxx
+  TestHyperTreeGridGradient.cxx,NO_VALID,NO_OUTPUT
   TestHyperTreeGridPlaneCutter.cxx,NO_VALID,NO_OUTPUT
   TestHyperTreeGridRemoveGhostCells.cxx,NO_VALID,NO_OUTPUT
   TestHyperTreeGridTernary2D.cxx
