@@ -54,6 +54,18 @@ public:
   vtkBooleanMacro(UserManagedInputs, vtkTypeBool);
   ///@}
 
+  ///@{
+  /**
+   * Set/Get if we want to use implicit array when appending the polydata. Using implicit array
+   * improve the execution time of the filter and reduce the memory consumption of the output.
+   * However, accessing arrays can be slower.
+   * Default to false
+   */
+  vtkGetMacro(UseImplicitArray, bool);
+  vtkSetMacro(UseImplicitArray, bool);
+  vtkBooleanMacro(UseImplicitArray, bool);
+  ///@}
+
   /**
    * Add a dataset to the list of data to append. Should not be
    * used when UserManagedInputs is true, use SetInputByNumber instead.
@@ -134,6 +146,8 @@ private:
   }
 
   vtkTypeBool UserManagedInputs;
+
+  bool UseImplicitArray = false;
 
   vtkAppendPolyData(const vtkAppendPolyData&) = delete;
   void operator=(const vtkAppendPolyData&) = delete;
