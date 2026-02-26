@@ -11,6 +11,7 @@ vtk_add_test_python(
   TestVTKAffineArray.py
   TestConstantArray.py
   TestVTKConstantArray.py
+  TestDataArraySelectionDict.py
   TestDefaultArgs.py
   TestEmptyInput.py
   TestEnums.py
