@@ -24,7 +24,7 @@
 
 // Fake the superclass for non-Python wrappers.
 // Python can handle the templated superclass; Java and others cannot.
-#if !defined(__VTK_WRAP__) || defined(__VTK_WRAP_PYTHON__)
+#if !defined(__VTK_WRAP__) || defined(__VTK_WRAP_PYTHON__) || defined(__VTK_WRAP_HIERARCHY__)
 #define vtkDataArray vtkAOSDataArrayTemplate<unsigned long>
 #endif
 VTK_ABI_NAMESPACE_BEGIN
@@ -32,7 +32,7 @@ class VTKCOMMONCORE_EXPORT vtkUnsignedLongArray : public vtkDataArray
 {
 public:
   vtkTypeMacro(vtkUnsignedLongArray, vtkDataArray);
-#if !defined(__VTK_WRAP__) || defined(__VTK_WRAP_PYTHON__)
+#if !defined(__VTK_WRAP__) || defined(__VTK_WRAP_PYTHON__) || defined(__VTK_WRAP_HIERARCHY__)
 #undef vtkDataArray
 #endif
   static vtkUnsignedLongArray* New();
