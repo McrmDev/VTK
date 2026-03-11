@@ -131,7 +131,7 @@ public:
    * Initialize the traversal of the collection. This means the next call to GetNextItemAsObject()
    * will return the first object in the collection.
    */
-  void InitTraversal() { this->Current = this->Objects.begin(); }
+  void InitTraversal() { this->Current = 0; }
 
   /**
    * A reentrant safe way to iterate through a collection.
@@ -184,14 +184,14 @@ public:
   ///@}
 
 protected:
-  vtkCollection();
+  vtkCollection() = default;
   ~vtkCollection() override;
 
   // See vtkGarbageCollector.h:
   void ReportReferences(vtkGarbageCollector* collector) override;
 
 private:
-  std::vector<vtkObject*>::iterator Current;
+  std::size_t Current = 0;
   std::vector<vtkObject*> Objects;
 
   vtkCollection(const vtkCollection&) = delete;
@@ -200,11 +200,11 @@ private:
 
 inline vtkObject* vtkCollection::GetNextItemAsObject()
 {
-  if (this->Current >= this->Objects.end())
+  if (this->Current >= this->Objects.size())
   {
     return nullptr;
   }
-  vtkObject* obj = *this->Current;
+  vtkObject* obj = this->Objects[this->Current];
   this->Current++;
   return obj;
 }
