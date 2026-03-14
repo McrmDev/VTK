@@ -35,9 +35,9 @@ public:
   static vtkSOA@VTK_TYPE_NAME@Array* ExtendedNew();
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
-  // This macro expands to the set of method declarations that
-  // make up the interface of vtkSOADataArrayTemplate, which is ignored
-  // by the wrappers.
+  // This macro expands to the set of method declarations that make up
+  // the interface of vtkSOADataArrayTemplate, which is ignored by wrappers
+  // other than the Python wrappers
 #if (defined(__VTK_WRAP__) || defined(__WRAP_GCCXML__)) && !defined(__VTK_WRAP_PYTHON__)
   vtkCreateSOAWrappedArrayInterface(@CONCRETE_TYPE@);
 #endif
