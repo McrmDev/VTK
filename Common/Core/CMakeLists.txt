@@ -378,7 +378,6 @@ set(template_classes
   vtkCompositeArray
   vtkConstantArray
   vtkDenseArray
-  vtkGenericDataArray
   vtkIndexedArray
   vtkScaledSOADataArrayTemplate
   vtkSOADataArrayTemplate
@@ -391,6 +390,7 @@ set(template_classes
 
 set(nowrap_template_classes
   vtkCompositeImplicitBackend
+  vtkGenericDataArray
   vtkImplicitArray
   vtkIndexedImplicitBackend
   vtkStridedImplicitBackend
@@ -474,7 +474,6 @@ set(headers
   vtkDataArrayRange.h
   vtkDeprecation.h
   vtkEventData.h
-  vtkGenericDataArrayLookupHelper.h
   vtkIOStream.h
   vtkIOStreamFwd.h
   vtkLegacy.h
@@ -620,6 +619,7 @@ set(nowrap_headers
   vtkDataArrayTupleRange_Generic.h
   vtkDataArrayValueRange_AOS.h
   vtkDataArrayValueRange_Generic.h
+  vtkGenericDataArrayLookupHelper.h
   vtkHashCombiner.h
   vtkImplicitArrayTraits.h
   vtkInherits.h

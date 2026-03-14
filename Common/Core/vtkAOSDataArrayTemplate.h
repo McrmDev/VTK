@@ -45,11 +45,17 @@ VTK_ABI_NAMESPACE_END
 VTK_ABI_NAMESPACE_BEGIN
 template <class ValueTypeT>
 class VTKCOMMONCORE_EXPORT vtkAOSDataArrayTemplate
+#ifndef __VTK_WRAP__
   : public vtkGenericDataArray<vtkAOSDataArrayTemplate<ValueTypeT>, ValueTypeT,
       vtkArrayTypes::VTK_AOS_DATA_ARRAY>
 {
   using GenericDataArrayType = vtkGenericDataArray<vtkAOSDataArrayTemplate<ValueTypeT>, ValueTypeT,
     vtkArrayTypes::VTK_AOS_DATA_ARRAY>;
+#else // Fake the superclass for the wrappers.
+  : public vtkDataArray
+{
+  using GenericDataArrayType = vtkDataArray;
+#endif
 
   // Friendship required by vtkDataArray(Value/Tuple)Range so that it can access the memory buffer
   // which is required to avoid accessing raw pointers that might no longer be valid.
@@ -62,9 +68,13 @@ class VTKCOMMONCORE_EXPORT vtkAOSDataArrayTemplate
 public:
   using SelfType = vtkAOSDataArrayTemplate<ValueTypeT>;
   vtkTemplateTypeMacro(SelfType, GenericDataArrayType);
+#ifndef __VTK_WRAP__
   using typename Superclass::ArrayTypeTag;
   using typename Superclass::DataTypeTag;
   using typename Superclass::ValueType;
+#else
+  using ValueType = ValueTypeT;
+#endif
 
   enum DeleteMethod
   {
@@ -348,6 +358,11 @@ public:
   {
     this->Superclass::InsertTuplesStartingAt(dstStart, srcIds, source);
   }
+
+#ifdef __VTK_WRAP__
+  // Add APIs inherited from vtkGenericDataArray, which is excluded from wrapping
+  vtkCreateGenericWrappedArrayInterface(ValueType);
+#endif
 
 protected:
   vtkAOSDataArrayTemplate();

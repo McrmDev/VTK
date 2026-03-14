@@ -33,18 +33,28 @@ VTK_ABI_NAMESPACE_BEGIN
 template <class ValueTypeT>
 class VTK_DEPRECATED_IN_9_7_0("Use vtkSOADataArrayTemplate and scale values yourself")
   VTKCOMMONCORE_EXPORT vtkScaledSOADataArrayTemplate
+#ifndef __VTK_WRAP__
   : public vtkGenericDataArray<vtkScaledSOADataArrayTemplate<ValueTypeT>, ValueTypeT,
       /*vtkArrayTypes::VTK_SCALED_SOA_DATA_ARRAY*/ 7>
 {
   using GenericDataArrayType = vtkGenericDataArray<vtkScaledSOADataArrayTemplate<ValueTypeT>,
     ValueTypeT, /*vtkArrayTypes::VTK_SCALED_SOA_DATA_ARRAY*/ 7>;
+#else
+  : public vtkDataArray
+{
+  using GenericDataArrayType = vtkDataArray;
+#endif
 
 public:
   using SelfType = vtkScaledSOADataArrayTemplate<ValueTypeT>;
   vtkTemplateTypeMacro(SelfType, GenericDataArrayType);
+#ifndef __VTK_WRAP__
   using typename Superclass::ArrayTypeTag;
   using typename Superclass::DataTypeTag;
   using typename Superclass::ValueType;
+#else
+  using ValueType = ValueTypeT;
+#endif
 
   enum DeleteMethod
   {
@@ -234,6 +244,11 @@ public:
   {
     this->Superclass::InsertTuplesStartingAt(dstStart, srcIds, source);
   }
+
+#ifdef __VTK_WRAP__
+  // Add APIs inherited from vtkGenericDataArray, which is excluded from wrapping
+  vtkCreateGenericWrappedArrayInterface(ValueType);
+#endif
 
 protected:
   vtkScaledSOADataArrayTemplate();
