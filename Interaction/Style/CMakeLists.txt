@@ -17,6 +17,9 @@ set(classes
   vtkInteractorStyleTrackballCamera
   vtkInteractorStyleUnicam
   vtkInteractorStyleUser
+  vtkJoystickFly
+  vtkJoystickFlyIn
+  vtkJoystickFlyOut
 
   vtkInteractorStyleSwitch
   vtkParallelCoordinatesInteractorStyle)
