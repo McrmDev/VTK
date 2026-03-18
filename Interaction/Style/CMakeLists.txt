@@ -25,7 +25,8 @@ set(classes
   vtkTableTopRotate
   vtkTrackballEnvironmentRotate
   vtkTrackballMoveActor
-  vtkTrackballMultiRotate)
+  vtkTrackballMultiRotate
+  vtkTrackballPan)
 
 if (ANDROID OR APPLE_IOS)
   set(style_override "vtkInteractorStyleMultiTouchCamera")
