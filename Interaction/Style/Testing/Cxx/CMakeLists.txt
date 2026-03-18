@@ -7,5 +7,6 @@ vtk_add_test_cxx(vtkInteractionStyleCxxTests tests
   TestTrackballMoveActor.cxx,NO_DATA
   TestTrackballMultiRotate.cxx,NO_DATA
   TestTrackballPan.cxx,NO_DATA
+  TestTrackballRoll.cxx,NO_DATA
   )
 vtk_test_cxx_executable(vtkInteractionStyleCxxTests tests)
