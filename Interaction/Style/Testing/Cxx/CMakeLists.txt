@@ -9,5 +9,6 @@ vtk_add_test_cxx(vtkInteractionStyleCxxTests tests
   TestTrackballPan.cxx,NO_DATA
   TestTrackballRoll.cxx,NO_DATA
   TestTrackballRotate.cxx,NO_DATA
-  )
+  TestTrackballZoom.cxx,NO_DATA
+  TestTrackballZoomToMouse.cxx,NO_DATA)
 vtk_test_cxx_executable(vtkInteractionStyleCxxTests tests)

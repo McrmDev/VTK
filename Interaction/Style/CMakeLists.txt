@@ -28,7 +28,9 @@ set(classes
   vtkTrackballMultiRotate
   vtkTrackballPan
   vtkTrackballRoll
-  vtkTrackballRotate)
+  vtkTrackballRotate
+  vtkTrackballZoom
+  vtkTrackballZoomToMouse)
 
 if (ANDROID OR APPLE_IOS)
   set(style_override "vtkInteractorStyleMultiTouchCamera")
