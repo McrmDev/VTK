@@ -11,6 +11,7 @@ set(classes
   vtkInteractorStyleRubberBand3D
   vtkInteractorStyleRubberBandPick
   vtkInteractorStyleRubberBandZoom
+  vtkInteractorStyleSwitch
   vtkInteractorStyleTerrain
   vtkInteractorStyleTrackball
   vtkInteractorStyleTrackballActor
@@ -20,9 +21,8 @@ set(classes
   vtkJoystickFly
   vtkJoystickFlyIn
   vtkJoystickFlyOut
-
-  vtkInteractorStyleSwitch
-  vtkParallelCoordinatesInteractorStyle)
+  vtkParallelCoordinatesInteractorStyle
+  vtkTableTopRotate)
 
 if (ANDROID OR APPLE_IOS)
   set(style_override "vtkInteractorStyleMultiTouchCamera")
