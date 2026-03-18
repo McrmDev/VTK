@@ -22,7 +22,8 @@ set(classes
   vtkJoystickFlyIn
   vtkJoystickFlyOut
   vtkParallelCoordinatesInteractorStyle
-  vtkTableTopRotate)
+  vtkTableTopRotate
+  vtkTrackballEnvironmentRotate)
 
 if (ANDROID OR APPLE_IOS)
   set(style_override "vtkInteractorStyleMultiTouchCamera")
