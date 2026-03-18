@@ -1,9 +1,11 @@
 set(classes
+  vtkCameraManipulator
   vtkInteractorStyleDrawPolygon
   vtkInteractorStyleFlight
   vtkInteractorStyleImage
   vtkInteractorStyleJoystickActor
   vtkInteractorStyleJoystickCamera
+  vtkInteractorStyleManipulator
   vtkInteractorStyleMultiTouchCamera
   vtkInteractorStyleRubberBand2D
   vtkInteractorStyleRubberBand3D
