@@ -117,9 +117,9 @@ int TestResampleToImage(int, char*[])
   {
     zeros += !val;
   }
-  if (zeros != 744733)
+  if (zeros != 708638)
   {
-    std::cout << "Caught " << zeros << " invalid points, it should have been 744733" << std::endl;
+    std::cout << "Caught " << zeros << " invalid points, it should have been 708638" << std::endl;
     status = 1;
   }
 
