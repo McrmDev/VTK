@@ -10,11 +10,12 @@
 #include "vtkInformation.h"
 #include "vtkInformationExecutivePortKey.h"
 #include "vtkInformationVector.h"
-#include "vtkMarchingCubesTriangleCases.h"
+#include "vtkMarchingCellsContourCases.h"
 #include "vtkObjectFactory.h"
 #include "vtkPointData.h"
 #include "vtkPolyData.h"
 #include "vtkStreamingDemandDrivenPipeline.h"
+
 #include <cmath>
 
 VTK_ABI_NAMESPACE_BEGIN
@@ -475,11 +476,8 @@ void vtkImageMarchingCubesHandleCube(vtkImageMarchingCubes* self, int cellX, int
   double value;
   int cubeIndex, ii;
   vtkIdType pointIds[3];
-  vtkMarchingCubesTriangleCases *triCase, *triCases;
 
   vtkInformation* inInfo = self->GetExecutive()->GetInputInformation(0, 0);
-
-  triCases = vtkMarchingCubesTriangleCases::GetCases();
 
   inData->GetIncrements(inc0, inc1, inc2);
   for (valueIdx = 0; valueIdx < numContours; ++valueIdx)
@@ -523,8 +521,7 @@ void vtkImageMarchingCubesHandleCube(vtkImageMarchingCubes* self, int cellX, int
     if (cubeIndex != 0 && cubeIndex != 255)
     {
       // Get edges.
-      triCase = triCases + cubeIndex;
-      int* edge = triCase->edges;
+      const int* edge = vtkMarchingCellsContourCases::GetHexahedronCase(cubeIndex);
       // loop over triangles
       while (*edge > -1)
       {

@@ -37,6 +37,24 @@ public:
   using TetraCase = int[7];
   static const TetraCase* GetTetraCases();
   static const TetraCase& GetTetraCase(uint8_t caseIndex) { return GetTetraCases()[caseIndex]; }
+
+  using VoxelCase = int[16];
+  static const VoxelCase* GetVoxelCases();
+  static const VoxelCase& GetVoxelCase(uint8_t caseIndex) { return GetVoxelCases()[caseIndex]; }
+
+  using HexahedronCase = int[16];
+  static const HexahedronCase* GetHexahedronCases();
+  static const HexahedronCase& GetHexahedronCase(uint8_t caseIndex)
+  {
+    return GetHexahedronCases()[caseIndex];
+  }
+
+  using HexahedronWithPolygonCase = int[17];
+  static const HexahedronWithPolygonCase* GetHexahedronWithPolygonCases();
+  static const HexahedronWithPolygonCase& GetHexahedronWithPolygonCase(uint8_t caseIndex)
+  {
+    return GetHexahedronWithPolygonCases()[caseIndex];
+  }
 };
 VTK_ABI_NAMESPACE_END
 
