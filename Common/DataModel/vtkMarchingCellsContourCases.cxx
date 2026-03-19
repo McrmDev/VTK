@@ -64,6 +64,16 @@ constexpr vtkMarchingCellsContourCases::QuadCase QuadCases[] = {
   { 3, 0, -1, -1, -1 },
   { -1, -1, -1, -1, -1 },
 };
+
+//------------------------------------------------------------------------------
+// Marching tetras case table
+constexpr vtkMarchingCellsContourCases::TetraCase TetraCases[] = { { -1, -1, -1, -1, -1, -1, -1 },
+  { 3, 0, 2, -1, -1, -1, -1 }, { 1, 0, 4, -1, -1, -1, -1 }, { 2, 3, 4, 2, 4, 1, -1 },
+  { 2, 1, 5, -1, -1, -1, -1 }, { 5, 3, 1, 1, 3, 0, -1 }, { 2, 0, 5, 5, 0, 4, -1 },
+  { 5, 3, 4, -1, -1, -1, -1 }, { 4, 3, 5, -1, -1, -1, -1 }, { 4, 0, 5, 5, 0, 2, -1 },
+  { 5, 0, 3, 1, 0, 5, -1 }, { 2, 5, 1, -1, -1, -1, -1 }, { 4, 3, 1, 1, 3, 2, -1 },
+  { 4, 0, 1, -1, -1, -1, -1 }, { 2, 0, 3, -1, -1, -1, -1 }, { -1, -1, -1, -1, -1, -1, -1 } };
+//------------------------------------------------------------------------------
 }
 
 VTK_ABI_NAMESPACE_BEGIN
@@ -89,5 +99,11 @@ const vtkMarchingCellsContourCases::PixelCase* vtkMarchingCellsContourCases::Get
 const vtkMarchingCellsContourCases::QuadCase* vtkMarchingCellsContourCases::GetQuadCases()
 {
   return QuadCases;
+}
+
+//------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::TetraCase* vtkMarchingCellsContourCases::GetTetraCases()
+{
+  return TetraCases;
 }
 VTK_ABI_NAMESPACE_END

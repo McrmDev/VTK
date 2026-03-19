@@ -33,6 +33,10 @@ public:
   using QuadCase = int[5];
   static const QuadCase* GetQuadCases();
   static const QuadCase& GetQuadCase(uint8_t caseIndex) { return GetQuadCases()[caseIndex]; }
+
+  using TetraCase = int[7];
+  static const TetraCase* GetTetraCases();
+  static const TetraCase& GetTetraCase(uint8_t caseIndex) { return GetTetraCases()[caseIndex]; }
 };
 VTK_ABI_NAMESPACE_END
 
