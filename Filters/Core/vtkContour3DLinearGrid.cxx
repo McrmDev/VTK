@@ -248,7 +248,7 @@ struct ContourCellsBase
     // the end of the arrays.
     this->NumPts = numPts;
     this->NumTris = numPts / 3;
-    this->NewPts->WriteVoidPointer(0, 3 * (this->NumPts + this->TotalPts));
+    this->NewPts->SetNumberOfTuples(this->NumPts + this->TotalPts);
     this->NewPolys->ResizeExact(
       this->NumTris + this->TotalTris, 3 * (this->NumTris + this->TotalTris));
 
@@ -1125,7 +1125,7 @@ int ProcessMerged(vtkContour3DLinearGrid* filter, vtkPoints* inPts, vtkPoints* o
   numThreads = nt;
 
   // Generate points (one per unique edge)
-  outPts->GetData()->WriteVoidPointer(0, 3 * (numPts + totalPts));
+  outPts->GetData()->SetNumberOfTuples(numPts + totalPts);
   ProduceMergedPointsWorker<TIds> produceMergedPointsWorker;
 
   using DispatcherProducePoints = vtkArrayDispatch::Dispatch2ByArray<vtkArrayDispatch::PointArrays,

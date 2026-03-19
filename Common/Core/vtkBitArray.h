@@ -296,6 +296,8 @@ public:
    */
   ValueType* WritePointer(vtkIdType id, vtkIdType number);
 
+  VTK_DEPRECATED_IN_9_7_0("Use vtkBitArray::WritePointer(valueIdx, numValues) or "
+                          "vtkAbstractArray::SetNumberOf[Values/Tuples]() instead")
   void* WriteVoidPointer(vtkIdType id, vtkIdType number) override
   {
     return this->WritePointer(id, number);

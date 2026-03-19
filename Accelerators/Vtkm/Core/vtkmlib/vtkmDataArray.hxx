@@ -590,12 +590,20 @@ void* vtkmDataArray<T>::GetDeviceVoidPointer(vtkIdType valueIdx)
   return nullptr;
 }
 
+//-----------------------------------------------------------------------------
 template <typename T>
-void* vtkmDataArray<T>::WriteVoidPointer(vtkIdType valueIdx, vtkIdType numValues)
+T* vtkmDataArray<T>::WritePointer(vtkIdType valueIdx, vtkIdType numValues)
 {
   vtkIdType numTuples = (numValues + this->NumberOfComponents - 1) / this->NumberOfComponents;
   this->ReallocateTuples(numTuples);
   return this->GetPointer(valueIdx);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+void* vtkmDataArray<T>::WriteVoidPointer(vtkIdType valueIdx, vtkIdType numValues)
+{
+  return this->WritePointer(valueIdx, numValues);
 }
 
 //-----------------------------------------------------------------------------
