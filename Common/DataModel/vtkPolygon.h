@@ -279,7 +279,7 @@ public:
 
 protected:
   vtkPolygon();
-  ~vtkPolygon() override;
+  ~vtkPolygon() override = default;
 
   // Compute the interpolation functions using Mean Value Coordinate.
   void InterpolateFunctionsUsingMVC(const double x[3], double* weights);
@@ -289,14 +289,14 @@ protected:
   double Tol;              // Internal tolerance set by ComputeBounds()
   void ComputeTolerance(); // Compute the internal tolerance Tol
 
-  int SuccessfulTriangulation; // Stops recursive triangulation if necessary
-  vtkIdList* Tris;             // Output triangulation placed here
+  int SuccessfulTriangulation;     // Stops recursive triangulation if necessary
+  vtkSmartPointer<vtkIdList> Tris; // Output triangulation placed here
 
   // These are used for internal computation.
-  vtkTriangle* Triangle;
-  vtkQuad* Quad;
-  vtkDoubleArray* TriScalars;
-  vtkLine* Line;
+  vtkSmartPointer<vtkTriangle> Triangle;
+  vtkSmartPointer<vtkQuad> Quad;
+  vtkSmartPointer<vtkDoubleArray> TriScalars;
+  vtkSmartPointer<vtkLine> Line;
 
   // Parameter indicating whether to use Mean Value Coordinate algorithm
   // for interpolation. The parameter is false by default.
