@@ -55,6 +55,10 @@ public:
   {
     return GetHexahedronWithPolygonCases()[caseIndex];
   }
+
+  using WedgeCase = int[13];
+  static const WedgeCase* GetWedgeCases();
+  static const WedgeCase& GetWedgeCase(uint8_t caseIndex) { return GetWedgeCases()[caseIndex]; }
 };
 VTK_ABI_NAMESPACE_END
 
