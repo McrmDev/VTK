@@ -25,6 +25,14 @@ public:
   {
     return GetTriangleCases()[caseIndex];
   }
+
+  using PixelCase = int[5];
+  static const PixelCase* GetPixelCases();
+  static const PixelCase& GetPixelCase(uint8_t caseIndex) { return GetPixelCases()[caseIndex]; }
+
+  using QuadCase = int[5];
+  static const QuadCase* GetQuadCases();
+  static const QuadCase& GetQuadCase(uint8_t caseIndex) { return GetQuadCases()[caseIndex]; }
 };
 VTK_ABI_NAMESPACE_END
 
