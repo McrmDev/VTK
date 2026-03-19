@@ -114,7 +114,9 @@ struct vtkVoronoiWheel
   {
     this->Id = id;
     this->NumSpokes = numSpokes = (this->Wheels[id + 1] - this->Wheels[id]);
-    this->LocalSpokes = &(this->Spokes[this->Wheels[id]]);
+    this->LocalSpokes =
+      ((size_t)this->Wheels[id] < this->Spokes.size() ? &(this->Spokes[this->Wheels[id]])
+                                                      : nullptr);
     return this->LocalSpokes;
   }
 }; // vtkVoronoiWheel
