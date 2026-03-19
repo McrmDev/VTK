@@ -18,6 +18,13 @@ public:
   using LineCase = int[2];
   static const LineCase* GetLineCases();
   static const LineCase& GetLineCase(uint8_t caseIndex) { return GetLineCases()[caseIndex]; }
+
+  using TriangleCase = int[3];
+  static const TriangleCase* GetTriangleCases();
+  static const TriangleCase& GetTriangleCase(uint8_t caseIndex)
+  {
+    return GetTriangleCases()[caseIndex];
+  }
 };
 VTK_ABI_NAMESPACE_END
 
