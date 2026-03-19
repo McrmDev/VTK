@@ -2,19 +2,18 @@
 // SPDX-FileCopyrightText: Copyright (c) 2000 - 2009, Lawrence Livermore National Security, LLC
 // SPDX-License-Identifier: BSD-3-Clause
 
-#ifndef vtkTableBasedClipCases_h
-#define vtkTableBasedClipCases_h
+#ifndef vtkMarchingCellsClipCases_h
+#define vtkMarchingCellsClipCases_h
 
-#include "vtkFiltersGeneralModule.h"
+#include "vtkCommonDataModelModule.h"
 #include "vtkSetGet.h"
 #include "vtkCellType.h"
 
 #include <array>
 #include <cstdint>
-#include <type_traits>
 
 VTK_ABI_NAMESPACE_BEGIN
-class VTKFILTERSGENERAL_EXPORT vtkTableBasedClipCasesBase
+class VTKCOMMONDATAMODEL_EXPORT vtkMarchingCellsClipCasesBase
 {
 public:
   // Points of original cell (up to 8, for the hex)
@@ -167,11 +166,11 @@ public:
 
 // Primary template declaration
 template <bool InsideOut>
-class VTKFILTERSGENERAL_EXPORT vtkTableBasedClipCases;
+class VTKCOMMONDATAMODEL_EXPORT vtkMarchingCellsClipCases;
 
 // Specialization for false
 template <>
-class VTKFILTERSGENERAL_EXPORT vtkTableBasedClipCases<false> : public vtkTableBasedClipCasesBase
+class VTKCOMMONDATAMODEL_EXPORT vtkMarchingCellsClipCases<false> : public vtkMarchingCellsClipCasesBase
 {
 public:
   static constexpr uint8_t DISCARDED_CELL_CASE = 0;
@@ -4832,7 +4831,7 @@ public:
 
 // Specialization for true
 template <>
-class vtkTableBasedClipCases<true> : public vtkTableBasedClipCasesBase
+class VTKCOMMONDATAMODEL_EXPORT vtkMarchingCellsClipCases<true> : public vtkMarchingCellsClipCasesBase
 {
 public:
   static constexpr uint8_t DISCARDED_CELL_CASE = 255;
@@ -9156,5 +9155,5 @@ public:
 
 VTK_ABI_NAMESPACE_END
 
-#endif // vtkTableBasedClipCases_h
-// VTK-HeaderTest-Exclude: vtkTableBasedClipCases.h
+#endif // vtkMarchingCellsClipCases_h
+// VTK-HeaderTest-Exclude: vtkMarchingCellsClipCases.h

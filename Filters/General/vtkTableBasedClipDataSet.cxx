@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "vtkTableBasedClipDataSet.h"
+#include "vtkMarchingCellsClipCases.h"
 
 #include "vtkAppendFilter.h"
 #include "vtkArrayDispatch.h"
@@ -31,7 +32,6 @@
 #include "vtkSmartPointer.h"
 #include "vtkStaticEdgeLocatorTemplate.h"
 #include "vtkStructuredGrid.h"
-#include "vtkTableBasedClipCases.h"
 #include "vtkUnsignedCharArray.h"
 #include "vtkUnstructuredGrid.h"
 
@@ -556,7 +556,7 @@ using EdgeLocatorType = vtkStaticEdgeLocatorTemplate<TInputIdType, double>;
 template <typename TGrid, typename TInputIdType, bool TInsideOut>
 struct EvaluateCells
 {
-  using TBCCases = vtkTableBasedClipCases<TInsideOut>;
+  using MCCases = vtkMarchingCellsClipCases<TInsideOut>;
   using TEdge = EdgeType<TInputIdType>;
 
   TGrid* Input;
@@ -622,7 +622,7 @@ struct EvaluateCells
     double grdDiffs[8], point1ToPoint2, point1ToIso, point1Weight;
     uint8_t caseIndex, *thisCase, numberOfOutputCells, outputCellId, shape, numberOfCellPoints, p;
     uint8_t pointIndex, point1Index, point2Index;
-    const typename TBCCases::EDGEIDXS* edgeVertices = nullptr;
+    const typename MCCases::EDGEIDXS* edgeVertices = nullptr;
 
     const bool isFirst = vtkSMPTools::GetSingleThread();
     for (vtkIdType batchId = beginBatchId; batchId < endBatchId; ++batchId)
@@ -644,14 +644,14 @@ struct EvaluateCells
       {
         cellType = this->Input->GetCellType(cellId);
         // check if the cell type is supported
-        if (!TBCCases::IsCellTypeSupported(cellType))
+        if (!MCCases::IsCellTypeSupported(cellType))
         {
           if (cellType != VTK_EMPTY_CELL)
           {
             unsupportedCellTypes.insert(cellType);
           }
           // here we set that this cell is discarded
-          cellsCase[cellId] = TBCCases::DISCARDED_CELL_CASE;
+          cellsCase[cellId] = MCCases::DISCARDED_CELL_CASE;
           continue;
         }
         this->Input->GetCellPoints(cellId, numberOfPoints, pointIndices, idList);
@@ -665,7 +665,7 @@ struct EvaluateCells
         }
 
         // Keep the cell (Fast path)
-        if (TBCCases::IsCellKept(numberOfPoints, caseIndex))
+        if (MCCases::IsCellKept(numberOfPoints, caseIndex))
         {
           cellsCase[cellId] = caseIndex;
           batchNumberOfCells++;
@@ -673,18 +673,18 @@ struct EvaluateCells
           continue;
         }
         // Discard the cell (Fast path)
-        else if (TBCCases::IsCellDiscarded(numberOfPoints, caseIndex))
+        else if (MCCases::IsCellDiscarded(numberOfPoints, caseIndex))
         {
-          cellsCase[cellId] = TBCCases::DISCARDED_CELL_CASE;
+          cellsCase[cellId] = MCCases::DISCARDED_CELL_CASE;
           continue;
         }
         // Clip the cell
         cellsCase[cellId] = caseIndex;
 
         // shape case, number of outputs, and vertices from edges
-        thisCase = TBCCases::GetCellCase(cellType, caseIndex);
+        thisCase = MCCases::GetCellCase(cellType, caseIndex);
         numberOfOutputCells = *thisCase++;
-        edgeVertices = TBCCases::GetCellEdges(cellType);
+        edgeVertices = MCCases::GetCellEdges(cellType);
 
         for (outputCellId = 0; outputCellId < numberOfOutputCells; ++outputCellId)
         {
@@ -695,9 +695,9 @@ struct EvaluateCells
           {
             pointIndex = *thisCase++;
 
-            if (pointIndex >= TBCCases::EA && pointIndex <= TBCCases::EL) // Mid-Edge Point
+            if (pointIndex >= MCCases::EA && pointIndex <= MCCases::EL) // Mid-Edge Point
             {
-              const auto& edgePoints = edgeVertices[pointIndex - TBCCases::EA];
+              const auto& edgePoints = edgeVertices[pointIndex - MCCases::EA];
               point1Index = edgePoints[0];
               point2Index = edgePoints[1];
               if (point1Index > point2Index)
@@ -720,7 +720,7 @@ struct EvaluateCells
               edges.emplace_back(pointIndex1, pointIndex2, point1Weight);
             }
           }
-          if (shape != TBCCases::ST_PNT) // normal cell
+          if (shape != MCCases::ST_PNT) // normal cell
           {
             batchNumberOfCells++;
             batchCellsConnectivity += numberOfCellPoints;
@@ -828,7 +828,7 @@ struct Centroid
 template <typename TGrid, typename TInputIdType, typename TOutputIdType, bool TInsideOut>
 struct ExtractCells
 {
-  using TBCCases = vtkTableBasedClipCases<TInsideOut>;
+  using MCCases = vtkMarchingCellsClipCases<TInsideOut>;
   using TEdgeLocator = EdgeLocatorType<TInputIdType>;
   using TOutputIdTypeArray = vtkAOSDataArrayTemplate<TOutputIdType>;
 
@@ -906,7 +906,7 @@ struct ExtractCells
     int cellType;
     uint8_t *thisCase, numberOfOutputCells, shape, outputCellId, numberOfCellPoints, p;
     uint8_t pointIndex;
-    const typename TBCCases::EDGEIDXS* edgeVertices = nullptr;
+    const typename MCCases::EDGEIDXS* edgeVertices = nullptr;
     // Used to map the voxel/pixel indices to the hexahedron/quad indices
     static constexpr uint8_t voxelMap[8] = { 0, 1, 3, 2, 4, 5, 7, 6 };
 
@@ -931,7 +931,7 @@ struct ExtractCells
         // process cells that has output cells (either itself or at least because it's clipped)
         const auto& caseIndex = cellsCase[cellId];
         // Discard the cell (Fast path without using numberOfPoints)
-        if (caseIndex == TBCCases::DISCARDED_CELL_CASE)
+        if (caseIndex == MCCases::DISCARDED_CELL_CASE)
         {
           continue;
         }
@@ -940,7 +940,7 @@ struct ExtractCells
         this->Input->GetCellPoints(cellId, numberOfPoints, pointIndices, idList);
 
         // Keep the cell (Fast path)
-        if (TBCCases::IsCellKept(numberOfPoints, caseIndex))
+        if (MCCases::IsCellKept(numberOfPoints, caseIndex))
         {
           offsets[cellsOffset] = cellsConnectivityOffset;
           switch (cellType)
@@ -970,9 +970,9 @@ struct ExtractCells
         // Clip the cell
 
         // shape case, number of outputs, and vertices from edges
-        thisCase = TBCCases::GetCellCase(cellType, caseIndex);
+        thisCase = MCCases::GetCellCase(cellType, caseIndex);
         numberOfOutputCells = *thisCase++;
-        edgeVertices = TBCCases::GetCellEdges(cellType);
+        edgeVertices = MCCases::GetCellEdges(cellType);
 
         for (outputCellId = 0; outputCellId < numberOfOutputCells; ++outputCellId)
         {
@@ -983,23 +983,23 @@ struct ExtractCells
           {
             pointIndex = *thisCase++;
 
-            if (pointIndex <= TBCCases::P7) // Input Point
+            if (pointIndex <= MCCases::P7) // Input Point
             {
               // We know pt P0 must be > P0 since we already
               // assume P0 == 0.  This is why we do not
               // bother subtracting P0 from pt here.
               shapeIds[p] = static_cast<TOutputIdType>(pointsMap[pointIndices[pointIndex]]);
             }
-            else if (/*pointIndex >= TBCCases::EA &&*/ pointIndex <= TBCCases::EL) // Mid-Edge Point
+            else if (/*pointIndex >= MCCases::EA &&*/ pointIndex <= MCCases::EL) // Mid-Edge Point
             {
-              const auto& edgePoints = edgeVertices[pointIndex - TBCCases::EA];
+              const auto& edgePoints = edgeVertices[pointIndex - MCCases::EA];
               pointIndex1 = static_cast<TInputIdType>(pointIndices[edgePoints[0]]);
               pointIndex2 = static_cast<TInputIdType>(pointIndices[edgePoints[1]]);
 
               shapeIds[p] = static_cast<TOutputIdType>(this->NumberOfKeptPoints +
                 this->EdgeLocator.IsInsertedEdge(pointIndex1, pointIndex2));
             }
-            else // pointIndex == TBCCases::N0 // Centroid Point
+            else // pointIndex == MCCases::N0 // Centroid Point
             {
               shapeIds[p] = static_cast<TOutputIdType>(centroidIndex);
             }
@@ -1007,7 +1007,7 @@ struct ExtractCells
 
           switch (shape)
           {
-            case TBCCases::ST_HEX:
+            case MCCases::ST_HEX:
               types[cellsOffset] = VTK_HEXAHEDRON;
               offsets[cellsOffset] = cellsConnectivityOffset;
               std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 8 * sizeof(TOutputIdType));
@@ -1015,7 +1015,7 @@ struct ExtractCells
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_WDG:
+            case MCCases::ST_WDG:
               types[cellsOffset] = VTK_WEDGE;
               offsets[cellsOffset] = cellsConnectivityOffset;
               std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 6 * sizeof(TOutputIdType));
@@ -1023,7 +1023,7 @@ struct ExtractCells
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_PYR:
+            case MCCases::ST_PYR:
               types[cellsOffset] = VTK_PYRAMID;
               offsets[cellsOffset] = cellsConnectivityOffset;
               std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 5 * sizeof(TOutputIdType));
@@ -1031,7 +1031,7 @@ struct ExtractCells
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_TET:
+            case MCCases::ST_TET:
               types[cellsOffset] = VTK_TETRA;
               offsets[cellsOffset] = cellsConnectivityOffset;
               std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 4 * sizeof(TOutputIdType));
@@ -1039,7 +1039,7 @@ struct ExtractCells
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_QUA:
+            case MCCases::ST_QUA:
               types[cellsOffset] = VTK_QUAD;
               offsets[cellsOffset] = cellsConnectivityOffset;
               std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 4 * sizeof(TOutputIdType));
@@ -1047,7 +1047,7 @@ struct ExtractCells
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_TRI:
+            case MCCases::ST_TRI:
               types[cellsOffset] = VTK_TRIANGLE;
               offsets[cellsOffset] = cellsConnectivityOffset;
               std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 3 * sizeof(TOutputIdType));
@@ -1055,7 +1055,7 @@ struct ExtractCells
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_LIN:
+            case MCCases::ST_LIN:
               types[cellsOffset] = VTK_LINE;
               offsets[cellsOffset] = cellsConnectivityOffset;
               std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 2 * sizeof(TOutputIdType));
@@ -1063,14 +1063,14 @@ struct ExtractCells
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_VTX:
+            case MCCases::ST_VTX:
               types[cellsOffset] = VTK_VERTEX;
               offsets[cellsOffset] = cellsConnectivityOffset;
               connectivity[cellsConnectivityOffset++] = shapeIds[0];
               this->CellDataArrays.Copy(cellId, cellsOffset++);
               break;
 
-            case TBCCases::ST_PNT:
+            case MCCases::ST_PNT:
               this->Centroids[centroidsOffset] = Centroid(shapeIds, numberOfCellPoints);
               centroidIndex = this->NumberOfKeptPointsAndEdges + centroidsOffset++;
           }

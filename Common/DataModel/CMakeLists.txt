@@ -311,6 +311,7 @@ set(nowrap_headers
   vtkDataObjectImplicitBackendInterface.h
   vtkDataObjectTreeRange.h
   vtkPolyDataInternals.h
+  vtkMarchingCellsClipCases.h
   vtkStaticPointLocator2DPrivate.h
   vtkStaticPointLocatorPrivate.h)
 
