@@ -241,7 +241,7 @@ class TestClip(Testing.vtkTest):
 
         c.Update()
         data = c.GetOutputDataObject(0).GetBlock(0)
-        self.assertEqual(data.GetNumberOfCells(), 47)
+        self.assertEqual(data.GetNumberOfCells(), 42)
 
         rw = vtkRenderWindow()
         ren = vtkRenderer()

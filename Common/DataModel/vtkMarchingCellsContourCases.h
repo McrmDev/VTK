@@ -5,6 +5,7 @@
 #define vtkMarchingCellsContourCases_h
 
 #include "vtkCommonDataModelModule.h"
+#include "vtkType.h"
 
 #include <cstdint> // For uint8_t
 
@@ -59,6 +60,13 @@ public:
   using WedgeCase = int[13];
   static const WedgeCase* GetWedgeCases();
   static const WedgeCase& GetWedgeCase(uint8_t caseIndex) { return GetWedgeCases()[caseIndex]; }
+
+  using PyramidCase = int[13];
+  static const PyramidCase* GetPyramidCases();
+  static const PyramidCase& GetPyramidCase(uint8_t caseIndex)
+  {
+    return GetPyramidCases()[caseIndex];
+  }
 };
 VTK_ABI_NAMESPACE_END
 
