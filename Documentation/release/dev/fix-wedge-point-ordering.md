@@ -14,6 +14,8 @@ faces with incorrect outward normals. The fixes are mentioned below:
      the incorrect point ordering
    - `TriangulateLocalIds` now generates positive volume tetrahedrons
    - Fix tests generating wrong point ordering
+   - Fix Clip Tables to produce correct point/edge ordering with positive volume wedges
+   - Fix Contour Tables to produce correct point/edge ordering
 
 2. `vtkQuadraticWedge`
    - Fix documentation and add topology drawing to match parametric coordinates
