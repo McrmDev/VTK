@@ -973,6 +973,89 @@ constexpr vtkMarchingCellsContourCases::PyramidCase PyramidCases[] = {
   { 4, 3, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },    // 30
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }, // 31
 };
+
+// clang-format off
+constexpr int N = 255;
+// edges for each cell
+constexpr int CellEdges[17][12][2] = {
+  // VTK_EMPTY_CELL
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_VERTEX
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_POLY_VERTEX
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_LINE
+  { { 0, 1 }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_POLY_LINE
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_TRIANGLE
+  { { 0, 1 }, { 1, 2 }, { 2, 0 }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_TRIANGLE_STRIP
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_POLYGON
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_PIXEL
+  { { 0, 1 }, { 1, 3 }, { 2, 3 }, { 0, 2 }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_QUAD
+  { { 0, 1 }, { 1, 2 }, { 3, 2 }, { 3, 0 }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_TETRA
+  { { 0, 1 }, { 1, 2 }, { 2, 0 }, { 0, 3 }, { 1, 3 }, { 2, 3 }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_VOXEL
+  { { 0, 1 }, { 1, 3 }, { 2, 3 }, { 0, 2 }, { 4, 5 }, { 5, 7 }, { 6, 7 }, { 4, 6 }, { 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 } },
+  // VTK_HEXAHEDRON
+  { { 0, 1 }, { 1, 2 }, { 3, 2 }, { 0, 3 }, { 4, 5 }, { 5, 6 }, { 7, 6 }, { 4, 7 }, { 0, 4 }, { 1, 5 }, { 3, 7 }, { 2, 6 } },
+  // VTK_WEDGE
+  { { 0, 1 }, { 1, 2 }, { 2, 0 }, { 3, 4 }, { 4, 5 }, { 5, 3 }, { 0, 3 }, { 1, 4 }, { 2, 5 }, { N, N }, { N, N }, { N, N } },
+  // VTK_PYRAMID
+  { { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 0 }, { 0, 4 }, { 1, 4 }, { 2, 4 }, { 3, 4 }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_PENTAGONAL_PRISM
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+  // VTK_HEXAGONAL_PRISM
+  { { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N }, { N, N } },
+};
+// clang-format on
+
+constexpr int NullCase[1] = { -1 };
+
+const int* const CellCases[17] = {
+  reinterpret_cast<const int*>(NullCase),        // 0  = VTK_EMPTY_CELL
+  reinterpret_cast<const int*>(NullCase),        // 1  = VTK_VERTEX
+  reinterpret_cast<const int*>(NullCase),        // 2  = VTK_POLY_VERTEX
+  reinterpret_cast<const int*>(LineCases),       // 3  = VTK_LINE
+  reinterpret_cast<const int*>(NullCase),        // 4  = VTK_POLY_LINE
+  reinterpret_cast<const int*>(TriangleCases),   // 5  = VTK_TRIANGLE
+  reinterpret_cast<const int*>(NullCase),        // 6  = VTK_TRIANGLE_STRIP
+  reinterpret_cast<const int*>(NullCase),        // 7  = VTK_POLYGON
+  reinterpret_cast<const int*>(PixelCases),      // 8  = VTK_PIXEL
+  reinterpret_cast<const int*>(QuadCases),       // 9  = VTK_QUAD
+  reinterpret_cast<const int*>(TetraCases),      // 10 = VTK_TETRA
+  reinterpret_cast<const int*>(VoxelCases),      // 11 = VTK_VOXEL
+  reinterpret_cast<const int*>(HexahedronCases), // 12 = VTK_HEXAHEDRON
+  reinterpret_cast<const int*>(WedgeCases),      // 13 = VTK_WEDGE
+  reinterpret_cast<const int*>(PyramidCases),    // 14 = VTK_PYRAMID
+  reinterpret_cast<const int*>(NullCase),        // 15 = VTK_PENTAGONAL_PRISM
+  reinterpret_cast<const int*>(NullCase),        // 16 = VTK_HEXAGONAL_PRISM
+};
+
+constexpr int CellCaseStride[17] = {
+  0,  // 0  = VTK_EMPTY_CELL
+  0,  // 1  = VTK_VERTEX
+  0,  // 2  = VTK_POLY_VERTEX
+  2,  // 3  = VTK_LINE
+  0,  // 4  = VTK_POLY_LINE
+  3,  // 5  = VTK_TRIANGLE
+  0,  // 6  = VTK_TRIANGLE_STRIP
+  0,  // 7  = VTK_POLYGON
+  5,  // 8  = VTK_PIXEL
+  5,  // 9  = VTK_QUAD
+  7,  // 10 = VTK_TETRA
+  16, // 11 = VTK_VOXEL
+  16, // 12 = VTK_HEXAHEDRON
+  13, // 13 = VTK_WEDGE
+  13, // 14 = VTK_PYRAMID
+  0,  // 15 = VTK_PENTAGONAL_PRISM
+  0,  // 16 = VTK_HEXAGONAL_PRISM
+};
 }
 
 VTK_ABI_NAMESPACE_BEGIN
@@ -983,9 +1066,23 @@ const vtkMarchingCellsContourCases::LineCase* vtkMarchingCellsContourCases::GetL
 }
 
 //------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::LineCase& vtkMarchingCellsContourCases::GetLineCase(
+  uint8_t caseId)
+{
+  return LineCases[caseId];
+}
+
+//------------------------------------------------------------------------------
 const vtkMarchingCellsContourCases::TriangleCase* vtkMarchingCellsContourCases::GetTriangleCases()
 {
   return TriangleCases;
+}
+
+//------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::TriangleCase& vtkMarchingCellsContourCases::GetTriangleCase(
+  uint8_t caseIndex)
+{
+  return TriangleCases[caseIndex];
 }
 
 //------------------------------------------------------------------------------
@@ -995,9 +1092,23 @@ const vtkMarchingCellsContourCases::PixelCase* vtkMarchingCellsContourCases::Get
 }
 
 //------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::PixelCase& vtkMarchingCellsContourCases::GetPixelCase(
+  uint8_t caseIndex)
+{
+  return PixelCases[caseIndex];
+}
+
+//------------------------------------------------------------------------------
 const vtkMarchingCellsContourCases::QuadCase* vtkMarchingCellsContourCases::GetQuadCases()
 {
   return QuadCases;
+}
+
+//------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::QuadCase& vtkMarchingCellsContourCases::GetQuadCase(
+  uint8_t caseIndex)
+{
+  return QuadCases[caseIndex];
 }
 
 //------------------------------------------------------------------------------
@@ -1007,9 +1118,23 @@ const vtkMarchingCellsContourCases::TetraCase* vtkMarchingCellsContourCases::Get
 }
 
 //------------------------------------------------------------------------------
-const vtkMarchingCellsContourCases::HexahedronCase* vtkMarchingCellsContourCases::GetVoxelCases()
+const vtkMarchingCellsContourCases::TetraCase& vtkMarchingCellsContourCases::GetTetraCase(
+  uint8_t caseIndex)
+{
+  return TetraCases[caseIndex];
+}
+
+//------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::VoxelCase* vtkMarchingCellsContourCases::GetVoxelCases()
 {
   return VoxelCases;
+}
+
+//------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::VoxelCase& vtkMarchingCellsContourCases::GetVoxelCase(
+  uint8_t caseIndex)
+{
+  return VoxelCases[caseIndex];
 }
 
 //------------------------------------------------------------------------------
@@ -1020,10 +1145,24 @@ vtkMarchingCellsContourCases::GetHexahedronCases()
 }
 
 //------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::HexahedronCase& vtkMarchingCellsContourCases::GetHexahedronCase(
+  uint8_t caseIndex)
+{
+  return HexahedronCases[caseIndex];
+}
+
+//------------------------------------------------------------------------------
 const vtkMarchingCellsContourCases::HexahedronWithPolygonCase*
 vtkMarchingCellsContourCases::GetHexahedronWithPolygonCases()
 {
   return HexahedronWithPolygonCases;
+}
+
+//------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::HexahedronWithPolygonCase&
+vtkMarchingCellsContourCases::GetHexahedronWithPolygonCase(uint8_t caseIndex)
+{
+  return HexahedronWithPolygonCases[caseIndex];
 }
 
 //------------------------------------------------------------------------------
@@ -1033,11 +1172,35 @@ const vtkMarchingCellsContourCases::WedgeCase* vtkMarchingCellsContourCases::Get
 }
 
 //------------------------------------------------------------------------------
+const vtkMarchingCellsContourCases::WedgeCase& vtkMarchingCellsContourCases::GetWedgeCase(
+  uint8_t caseIndex)
+{
+  return WedgeCases[caseIndex];
+}
+
+//------------------------------------------------------------------------------
 const vtkMarchingCellsContourCases::PyramidCase* vtkMarchingCellsContourCases::GetPyramidCases()
 {
   return PyramidCases;
 }
 
 //------------------------------------------------------------------------------
-static const vtkIdType* GetEdgeArray(int cellType, int edgeId);
+const vtkMarchingCellsContourCases::PyramidCase& vtkMarchingCellsContourCases::GetPyramidCase(
+  uint8_t caseIndex)
+{
+  return PyramidCases[caseIndex];
+}
+
+//------------------------------------------------------------------------------
+vtkMarchingCellsContourCases::CellCase vtkMarchingCellsContourCases::GetCellCase(
+  int cellType, uint8_t caseIndex)
+{
+  return CellCases[cellType] + CellCaseStride[cellType] * caseIndex;
+}
+
+//------------------------------------------------------------------------------
+vtkMarchingCellsContourCases::EdgeArray vtkMarchingCellsContourCases::GetCellEdges(int cellType)
+{
+  return CellEdges[cellType];
+}
 VTK_ABI_NAMESPACE_END
