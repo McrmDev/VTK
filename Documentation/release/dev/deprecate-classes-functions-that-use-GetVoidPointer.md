@@ -14,11 +14,13 @@ Several classes and methods have been deprecated to further reduce the usage of 
    instead.
 8. `vtkAbstractArray::NewIterator()` along with `vtkArrayIterator`, `vtkBitArrayIterator`, `vtkArrayIteratorTemplate`
    have been deprecated. Use `vtk::DataArrayValueRange` or the array directly instead.
-9. `vtkVoidArray` has been deprecated because it is no longer needed.
-10. `vtkScaledSOADataArrayTemplate` has been deprecated because it is no longer needed.
-11. `vtk(Angular)PeriodicDataArray` have been deprecated because they are no longer needed since
+9. `vtkAbstractArray:WriterToVoidPointer()` has been deprecated. Use `vtkAOSDataArrayTemplate::WriterPointer()` or
+   `vtkAbstractArray::SetNumberOf[Values/Tuples]()` instead
+10. `vtkVoidArray` has been deprecated because it is no longer needed.
+11. `vtkScaledSOADataArrayTemplate` has been deprecated because it is no longer needed.
+12. `vtk(Angular)PeriodicDataArray` have been deprecated because they are no longer needed since
     `vtkAngularPeriodicFilter` generates an implicit array using an internally defined backend.
-12. `vtkStdFunctionArray` has been deprecated because it is no longer needed.
+13. `vtkStdFunctionArray` has been deprecated because it is no longer needed.
 
 Additionally, to further reduce the usage of `vtkAbstractArray::GetVoidPointer()`, `vtk::DataArray(Value/Tuple)Range`
 have been extended to support all concrete `vtkAbstractArray` subclasses, including `vtkBitArray`, `vtkStringArray`, and
