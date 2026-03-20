@@ -8,7 +8,7 @@ energy, keeping surfaces physically plausible across the full roughness range.
 
 | Single Scattering IBL | Multiple Scattering IBL |
 |-----------------------|-------------------------|
-| ![Single Scattering IBL](./single-scatter-ibl.png) | ![Multiple Scattering IBL](./multiple-scatter-ibl.png) |
+| ![Single Scattering IBL](../imgs/9.6/single-scatter-ibl.png) | ![Multiple Scattering IBL](../imgs/9.6/multi-scatter-ibl.png) |
 
 In the single-scattering case, increasing roughness causes metallic spheres to
 grow progressively darker — an energy-conservation artifact rather than a
