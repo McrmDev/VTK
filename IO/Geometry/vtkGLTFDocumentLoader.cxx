@@ -878,8 +878,7 @@ bool vtkGLTFDocumentLoader::LoadImageData()
       }
     }
 
-    // mime-type must be defined with BufferView to get appropriate reader here (only two possible
-    // values)
+    // According to the spec, mime-type must be defined with BufferView
     if (image.MimeType == "image/jpeg")
     {
       reader = vtkSmartPointer<vtkJPEGReader>::New();
@@ -890,7 +889,7 @@ bool vtkGLTFDocumentLoader::LoadImageData()
     }
     else
     {
-      // check all registered readers to find one that can read the image stream
+      // If not specified or unknown, find a reader using the image reader factory
       vtkNew<vtkImageReader2Collection> availableReaders;
       vtkImageReader2Factory::GetRegisteredReaders(availableReaders);
 
