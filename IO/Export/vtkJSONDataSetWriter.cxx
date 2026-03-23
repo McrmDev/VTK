@@ -226,13 +226,16 @@ void vtkJSONDataSetWriter::Write(vtkDataSet* dataset)
   }
 
   // PolyData
-  if (polyData && polyData->GetPoints())
+  if (polyData)
   {
     this->ValidDataSet = true;
 
-    vtkPoints* points = polyData->GetPoints();
-    metaJsonFile << ",\n  \"points\": "
-                 << this->WriteArray(points->GetData(), "vtkPoints", "points");
+    if (polyData->GetPoints())
+    {
+      vtkPoints* points = polyData->GetPoints();
+      metaJsonFile << ",\n  \"points\": "
+                   << this->WriteArray(points->GetData(), "vtkPoints", "points");
+    }
 
     // Verts
     vtkNew<vtkIdTypeArray> cells;
