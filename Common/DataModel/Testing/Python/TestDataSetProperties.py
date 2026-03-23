@@ -2,7 +2,14 @@
 
 import unittest
 
-import numpy as np
+import vtkmodules.test.Testing as vtkTesting
+
+try:
+    import numpy as np
+except ImportError:
+    print("This test requires numpy!")
+    vtkTesting.skip()
+
 from vtkmodules.vtkCommonCore import vtkFloatArray, vtkIntArray, vtkPoints
 from vtkmodules.vtkCommonDataModel import (
     vtkImageData,
@@ -411,7 +418,6 @@ class TestFromXarray(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    import vtkmodules.test.Testing as vtkTesting
     vtkTesting.main([(TestImageDataProperties, "test"),
                      (TestPolyDataProperties, "test"),
                      (TestRectilinearGridProperties, "test"),

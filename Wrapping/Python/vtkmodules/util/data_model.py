@@ -2,6 +2,7 @@
 to VTK datasets. See examples at bottom.
 """
 
+import sys
 from contextlib import suppress
 from vtkmodules.vtkCommonCore import vtkPoints, vtkAbstractArray, vtkDataArray
 from vtkmodules.vtkCommonDataModel import (
@@ -250,10 +251,9 @@ class FieldDataBase(object):
         Multi-component arrays are split into columns named
         ``name_0``, ``name_1``, etc.
         """
-        try:
-            import pandas as pd
-        except ImportError:
-            raise ImportError("pandas is required for to_pandas()")
+        pd = sys.modules.get("pandas", None)
+        if pd is None:
+            raise RuntimeError("You must import pandas before calling to_pandas().")
 
         data = {}
         for name, arr in self.items():
@@ -274,10 +274,8 @@ class FieldDataBase(object):
         Each column becomes a single-component array.
         Existing arrays are removed first.
         """
-        try:
-            import pandas  # noqa: F401
-        except ImportError:
-            raise ImportError("pandas is required for from_pandas()")
+        if "pandas" not in sys.modules:
+            raise RuntimeError("You must import pandas before calling from_pandas().")
 
         self.Initialize()
         for name in df.columns:
@@ -290,10 +288,9 @@ class FieldDataBase(object):
         Multi-component arrays get dimensions
         ``("index", "component")``.
         """
-        try:
-            import xarray as xr
-        except ImportError:
-            raise ImportError("xarray is required for to_xarray()")
+        xr = sys.modules.get("xarray", None)
+        if xr is None:
+            raise RuntimeError("You must import xarray before calling to_xarray().")
 
         data_vars = {}
         for name, arr in self.items():
@@ -313,10 +310,8 @@ class FieldDataBase(object):
         Each variable becomes an array.
         Existing arrays are removed first.
         """
-        try:
-            import xarray  # noqa: F401
-        except ImportError:
-            raise ImportError("xarray is required for from_xarray()")
+        if "xarray" not in sys.modules:
+            raise RuntimeError("You must import xarray before calling from_xarray().")
 
         self.Initialize()
         for name in ds.data_vars:
