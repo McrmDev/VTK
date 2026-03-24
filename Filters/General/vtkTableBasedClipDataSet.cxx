@@ -720,12 +720,12 @@ struct EvaluateCells
               edges.emplace_back(pointIndex1, pointIndex2, point1Weight);
             }
           }
-          if (shape != MCCases::ST_PNT) // normal cell
+          if (shape != VTK_EMPTY_CELL) // normal cell
           {
             batchNumberOfCells++;
             batchCellsConnectivity += numberOfCellPoints;
           }
-          else // shape == ST_PNT
+          else // centroid
           {
             batchNumberOfCentroids++;
           }
@@ -1005,74 +1005,18 @@ struct ExtractCells
             }
           }
 
-          switch (shape)
+          if (shape != VTK_EMPTY_CELL) // normal cell
           {
-            case MCCases::ST_HEX:
-              types[cellsOffset] = VTK_HEXAHEDRON;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 8 * sizeof(TOutputIdType));
-              cellsConnectivityOffset += 8;
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_WDG:
-              types[cellsOffset] = VTK_WEDGE;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 6 * sizeof(TOutputIdType));
-              cellsConnectivityOffset += 6;
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_PYR:
-              types[cellsOffset] = VTK_PYRAMID;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 5 * sizeof(TOutputIdType));
-              cellsConnectivityOffset += 5;
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_TET:
-              types[cellsOffset] = VTK_TETRA;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 4 * sizeof(TOutputIdType));
-              cellsConnectivityOffset += 4;
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_QUA:
-              types[cellsOffset] = VTK_QUAD;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 4 * sizeof(TOutputIdType));
-              cellsConnectivityOffset += 4;
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_TRI:
-              types[cellsOffset] = VTK_TRIANGLE;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 3 * sizeof(TOutputIdType));
-              cellsConnectivityOffset += 3;
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_LIN:
-              types[cellsOffset] = VTK_LINE;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              std::memcpy(connectivity + offsets[cellsOffset], shapeIds, 2 * sizeof(TOutputIdType));
-              cellsConnectivityOffset += 2;
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_VTX:
-              types[cellsOffset] = VTK_VERTEX;
-              offsets[cellsOffset] = cellsConnectivityOffset;
-              connectivity[cellsConnectivityOffset++] = shapeIds[0];
-              this->CellDataArrays.Copy(cellId, cellsOffset++);
-              break;
-
-            case MCCases::ST_PNT:
-              this->Centroids[centroidsOffset] = Centroid(shapeIds, numberOfCellPoints);
-              centroidIndex = this->NumberOfKeptPointsAndEdges + centroidsOffset++;
+            types[cellsOffset] = shape;
+            offsets[cellsOffset] = cellsConnectivityOffset;
+            std::copy_n(shapeIds, numberOfCellPoints, connectivity + offsets[cellsOffset]);
+            cellsConnectivityOffset += numberOfCellPoints;
+            this->CellDataArrays.Copy(cellId, cellsOffset++);
+          }
+          else // centroid
+          {
+            this->Centroids[centroidsOffset] = Centroid(shapeIds, numberOfCellPoints);
+            centroidIndex = this->NumberOfKeptPointsAndEdges + centroidsOffset++;
           }
         }
       }
