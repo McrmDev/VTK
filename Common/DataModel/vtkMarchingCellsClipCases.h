@@ -178,7 +178,7 @@ private:
     /* case 1 */ 1,
     VTK_LINE, 2, P0, EA,
     /* case 2 */ 1,
-    VTK_LINE, 2, P1, EA,
+    VTK_LINE, 2, EA, P1,
     /* case 3 */ 1,
     VTK_LINE, 2, P0, P1,
     // VTK_TRIANGLE
@@ -4840,7 +4840,7 @@ private:
     /* case 1 */ 1,
     VTK_LINE, 2, EA, P1,
     /* case 2 */ 1,
-    VTK_LINE, 2, EA, P0,
+    VTK_LINE, 2, P0, EA,
     /* case 3 */ 0,
     // VTK_TRIANGLE
     /* case 0 */ 1,
