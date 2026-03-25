@@ -30,18 +30,28 @@
 VTK_ABI_NAMESPACE_BEGIN
 template <class ValueTypeT>
 class VTKCOMMONCORE_EXPORT vtkSOADataArrayTemplate
+#ifndef __VTK_WRAP__
   : public vtkGenericDataArray<vtkSOADataArrayTemplate<ValueTypeT>, ValueTypeT,
       vtkArrayTypes::VTK_SOA_DATA_ARRAY>
 {
   using GenericDataArrayType = vtkGenericDataArray<vtkSOADataArrayTemplate<ValueTypeT>, ValueTypeT,
     vtkArrayTypes::VTK_SOA_DATA_ARRAY>;
+#else // Fake the superclass for the wrappers.
+  : public vtkDataArray
+{
+  using GenericDataArrayType = vtkDataArray;
+#endif
 
 public:
   using SelfType = vtkSOADataArrayTemplate<ValueTypeT>;
   vtkTemplateTypeMacro(SelfType, GenericDataArrayType);
+#ifndef __VTK_WRAP__
   using typename Superclass::ArrayTypeTag;
   using typename Superclass::DataTypeTag;
   using typename Superclass::ValueType;
+#else
+  using ValueType = ValueTypeT;
+#endif
 
   enum DeleteMethod
   {
@@ -237,6 +247,11 @@ public:
 #ifndef __VTK_WRAP__
   // helper method for vtkDataArray.cxx DeepCopyWorker () operator
   void CopyData(vtkSOADataArrayTemplate<ValueType>* src);
+#endif
+
+#ifdef __VTK_WRAP__
+  // Add APIs inherited from vtkGenericDataArray, which is excluded from wrapping
+  vtkCreateGenericWrappedArrayInterface(ValueType);
 #endif
 
 protected:

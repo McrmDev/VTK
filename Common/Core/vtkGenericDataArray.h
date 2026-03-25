@@ -429,25 +429,42 @@ private:
 };
 VTK_ABI_NAMESPACE_END
 
+// These macros define the vtkGenericDataArray methods that aren't redefined
+// in vtkAOSDataArrayTemplate and vtkSOADataArrayTemplate.  The wrappers do
+// not see vtkGenericDataArray as a superclass of AOS/SOA arrays, so these
+// macros are used to fill in the missing parts of the inherited interface.
+#define vtkCreateGenericWrappedArrayReadInterface(T)                                               \
+  int GetDataType() const override;                                                                \
+  T GetDataTypeValueMin() const;                                                                   \
+  T GetDataTypeValueMax() const;                                                                   \
+  T* GetValueRange(int comp) VTK_SIZEHINT(2);                                                      \
+  T* GetValueRange() VTK_SIZEHINT(2);                                                              \
+  void GetValueRange(T range[2], int comp);                                                        \
+  void GetValueRange(T range[2], int comp);
+#define vtkCreateGenericWrappedArrayWriteInterface(T)                                              \
+  void InsertTypedTuple(vtkIdType i, const T* tuple) VTK_EXPECTS(0 <= i);                          \
+  vtkIdType InsertNextTypedTuple(const T* tuple);                                                  \
+  void InsertValue(vtkIdType id, T f) VTK_EXPECTS(0 <= id);                                        \
+  vtkIdType InsertNextValue(T f);
+#define vtkCreateGenericWrappedArrayInterface(T)                                                   \
+  vtkCreateGenericWrappedArrayReadInterface(T);                                                    \
+  vtkCreateGenericWrappedArrayWriteInterface(T);
+
 // This macro is used by the subclasses to create dummy
 // declarations for these functions such that the wrapper
 // can see them. The wrappers ignore vtkGenericDataArray.
 #define vtkCreateWrappedArrayReadInterface(T)                                                      \
-  int GetDataType() const override;                                                                \
-  T GetDataTypeValueMin() const;                                                                   \
-  T GetDataTypeValueMax() const;                                                                   \
+  vtkCreateGenericWrappedArrayReadInterface(T);                                                    \
   void GetTypedTuple(vtkIdType i, T* tuple) VTK_EXPECTS(0 <= i && i < GetNumberOfTuples());        \
-  T GetValue(vtkIdType id) const VTK_EXPECTS(0 <= id && id < GetNumberOfValues());                 \
-  T* GetValueRange(int comp) VTK_SIZEHINT(2);                                                      \
-  T* GetValueRange() VTK_SIZEHINT(2);
+  T GetTypedComponent(vtkIdType i, int c) const VTK_EXPECTS(0 <= c && c < GetNumberOfComponents()) \
+    VTK_EXPECTS(0 <= i && GetNumberOfComponents() * i + c < GetNumberOfValues());                  \
+  T GetValue(vtkIdType id) const VTK_EXPECTS(0 <= id && id < GetNumberOfValues());
 #define vtkCreateWrappedArrayWriteInterface(T)                                                     \
+  vtkCreateGenericWrappedArrayWriteInterface(T);                                                   \
   void SetTypedTuple(vtkIdType i, const T* tuple) VTK_EXPECTS(0 <= i && i < GetNumberOfTuples());  \
-  void InsertTypedTuple(vtkIdType i, const T* tuple) VTK_EXPECTS(0 <= i);                          \
-  vtkIdType InsertNextTypedTuple(const T* tuple);                                                  \
+  void SetTypedComponent(vtkIdType i, int c, ValueType value);                                     \
   void SetValue(vtkIdType id, T value) VTK_EXPECTS(0 <= id && id < GetNumberOfValues());           \
-  bool SetNumberOfValues(vtkIdType number) override;                                               \
-  void InsertValue(vtkIdType id, T f) VTK_EXPECTS(0 <= id);                                        \
-  vtkIdType InsertNextValue(T f);
+  bool SetNumberOfValues(vtkIdType number) override;
 
 #define VTK_INSTANTIATE_VALUERANGE_ARRAYTYPE(ArrayType, ValueType)                                 \
   template VTKCOMMONCORE_EXPORT bool DoComputeScalarRange(                                         \
