@@ -181,8 +181,11 @@ public:
   void SetVoidArray(void*, vtkIdType, int) override;
   void SetVoidArray(void*, vtkIdType, int, int) override;
   void SetArrayFreeFunction(void (*callback)(void*)) override;
+  VTK_DEPRECATED_IN_9_7_0("Use vtkAOSDataArrayTemplate::WritePointer(valueIdx, numValues) or "
+                          "vtkAbstractArray::SetNumberOf[Values/Tuples]() instead")
   void* WriteVoidPointer(vtkIdType valueIdx, vtkIdType numValues) override;
-  VTK_DEPRECATED_IN_9_7_0("Use vtkAOSDataArrayTemplate::WritePointer(valueIdx, numValues) instead")
+  VTK_DEPRECATED_IN_9_7_0("Use vtkAOSDataArrayTemplate::WritePointer(valueIdx, numValues) or "
+                          "vtkAbstractArray::SetNumberOf[Values/Tuples]() instead")
   ValueType* WritePointer(vtkIdType valueIdx, vtkIdType numValues);
   ///@}
 

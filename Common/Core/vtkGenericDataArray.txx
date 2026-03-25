@@ -254,9 +254,10 @@ void* vtkGenericDataArray<DerivedT, ValueTypeT, ArrayType>::WriteVoidPointer(vtk
 //-----------------------------------------------------------------------------
 template <class DerivedT, class ValueTypeT, int ArrayType>
 typename vtkGenericDataArray<DerivedT, ValueTypeT, ArrayType>::ValueType*
-vtkGenericDataArray<DerivedT, ValueTypeT, ArrayType>::WritePointer(vtkIdType id, vtkIdType number)
+vtkGenericDataArray<DerivedT, ValueTypeT, ArrayType>::WritePointer(
+  vtkIdType vtkNotUsed(id), vtkIdType vtkNotUsed(number))
 {
-  return static_cast<ValueType*>(this->WriteVoidPointer(id, number));
+  return nullptr;
 }
 
 //-----------------------------------------------------------------------------

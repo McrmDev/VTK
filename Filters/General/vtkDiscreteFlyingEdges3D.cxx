@@ -1305,7 +1305,7 @@ void vtkDiscreteFlyingEdges3DAlgorithm<TArray>::Contour(vtkDiscreteFlyingEdges3D
     vtkIdType totalPts = numOutXPts + numOutYPts + numOutZPts;
     if (totalPts > 0)
     {
-      newPts->GetData()->WriteVoidPointer(0, 3 * totalPts);
+      newPts->GetData()->SetNumberOfTuples(totalPts);
       algo.NewPoints =
         vtkAOSDataArrayTemplate<float>::FastDownCast(newPts->GetData())->GetPointer(0);
       newTris->ResizeExact(numOutTris, 3 * numOutTris);
@@ -1314,19 +1314,19 @@ void vtkDiscreteFlyingEdges3DAlgorithm<TArray>::Contour(vtkDiscreteFlyingEdges3D
       {
         vtkIdType numPrevPts = newScalars->GetNumberOfTuples();
         vtkIdType numNewPts = totalPts - numPrevPts;
-        newScalars->WriteVoidPointer(0, totalPts);
+        newScalars->SetNumberOfValues(totalPts);
         algo.NewScalars = vtk::DataArrayValueRange<1>(TArray::FastDownCast(newScalars)).begin();
         T TValue = static_cast<T>(value);
         std::fill_n(algo.NewScalars + numPrevPts, numNewPts, TValue);
       }
       if (newGradients)
       {
-        newGradients->WriteVoidPointer(0, 3 * totalPts);
+        newGradients->SetNumberOfTuples(totalPts);
         algo.NewGradients = newGradients->GetPointer(0);
       }
       if (newNormals)
       {
-        newNormals->WriteVoidPointer(0, 3 * totalPts);
+        newNormals->SetNumberOfTuples(totalPts);
         algo.NewNormals = newNormals->GetPointer(0);
       }
       if (algo.InterpolateAttributes)

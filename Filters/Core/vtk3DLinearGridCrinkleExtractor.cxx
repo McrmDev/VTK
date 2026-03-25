@@ -307,7 +307,7 @@ struct ExtractCells : public ExtractCellsBase
     // Now allocate the cell array, offset array, and cell types array.
     this->Cells->AllocateExact(numCells, size - numCells);
     vtkNew<vtkUnsignedCharArray> cellTypes;
-    unsigned char* ctptr = static_cast<unsigned char*>(cellTypes->WriteVoidPointer(0, numCells));
+    unsigned char* ctptr = cellTypes->WritePointer(0, numCells);
 
     // If cell data is requested, roll up generating cell ids
     vtkIdType* cellMap = nullptr;
@@ -435,7 +435,7 @@ struct ExtractPointsAndCells : public ExtractCellsBase
     // Now allocate the cell array, offset array, and cell types array.
     this->Cells->AllocateExact(numCells, size - numCells);
     vtkNew<vtkUnsignedCharArray> cellTypes;
-    unsigned char* ctptr = static_cast<unsigned char*>(cellTypes->WriteVoidPointer(0, numCells));
+    unsigned char* ctptr = cellTypes->WritePointer(0, numCells);
 
     // If cell data is requested, roll up generating cell ids
     vtkIdType* cellMap = nullptr;

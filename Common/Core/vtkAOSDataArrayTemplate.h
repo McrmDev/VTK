@@ -204,6 +204,7 @@ public:
    * data values requested.
    */
   ValueType* WritePointer(vtkIdType valueIdx, vtkIdType numValues);
+  VTK_DEPRECATED_IN_9_7_0("Use SetNumberOfValues() and GetPointer() on AOS arrays")
   void* WriteVoidPointer(vtkIdType valueIdx, vtkIdType numValues) override;
   ///@}
 

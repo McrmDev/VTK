@@ -1417,20 +1417,20 @@ void vtkFlyingEdgesPlaneCutterAlgorithm<TArray>::Contour(vtkFlyingEdgesPlaneCutt
   vtkIdType totalPts = numOutXPts + numOutYPts + numOutZPts;
   if (totalPts > 0)
   {
-    newPts->GetData()->WriteVoidPointer(0, 3 * totalPts);
+    newPts->GetData()->SetNumberOfTuples(totalPts);
     algo.NewPoints = vtkAOSDataArrayTemplate<float>::FastDownCast(newPts->GetData())->GetPointer(0);
     newTris->ResizeExact(numOutTris, 3 * numOutTris);
     algo.NewTris = newTris;
 
     if (newScalars)
     {
-      newScalars->WriteVoidPointer(0, totalPts);
+      newScalars->SetNumberOfValues(totalPts);
       algo.NewScalars = vtk::DataArrayValueRange<1>(TArray::FastDownCast(newScalars)).begin();
     }
 
     if (newNormals)
     {
-      newNormals->WriteVoidPointer(0, 3 * totalPts);
+      newNormals->SetNumberOfTuples(totalPts);
       algo.NewNormals = newNormals->GetPointer(0);
     }
 
