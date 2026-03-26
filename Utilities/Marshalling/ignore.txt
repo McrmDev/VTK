@@ -1,5 +1,6 @@
 Common/Core/vtkABI.h
 Common/Core/vtkAOSDataArrayTemplate.h
+Common/Core/vtkAbstractBuffer.h
 Common/Core/vtkAffineArray.h
 Common/Core/vtkAffineImplicitBackend.h
 Common/Core/vtkAndroidOutputWindow.h
@@ -35,6 +36,7 @@ Common/Core/vtkCharArray.h
 Common/Core/vtkCollectionIterator.h
 Common/Core/vtkCollectionRange.h
 Common/Core/vtkCommand.h
+Common/Core/vtkCommonCorePCH.h
 Common/Core/vtkCommonInformationKeyManager.h
 Common/Core/vtkCompiler.h
 Common/Core/vtkCompositeArray.h
@@ -105,10 +107,10 @@ Common/Core/vtkInherits.h
 Common/Core/vtkIntArray.h
 Common/Core/vtkInvoker.h
 Common/Core/vtkLargeInteger.h
+Common/Core/vtkLegacy.h
 Common/Core/vtkLogger.h
 Common/Core/vtkLongArray.h
 Common/Core/vtkLongLongArray.h
-Common/Core/vtkMappedDataArray.h
 Common/Core/vtkMarshalContext.h
 Common/Core/vtkMath.h
 Common/Core/vtkMathUtilities.h
@@ -256,6 +258,7 @@ Common/DataModel/vtkCellTypes.h
 Common/DataModel/vtkClosestNPointsStrategy.h
 Common/DataModel/vtkClosestPointStrategy.h
 Common/DataModel/vtkColor.h
+Common/DataModel/vtkCommonDataModelPCH.h
 Common/DataModel/vtkCompositeDataIterator.h
 Common/DataModel/vtkCompositeDataSetNodeReference.h
 Common/DataModel/vtkCompositeDataSetRange.h
@@ -396,6 +399,7 @@ Common/DataModel/vtkPointSetCellIterator.h
 Common/DataModel/vtkPointsProjectedHull.h
 Common/DataModel/vtkPolyDataCollection.h
 Common/DataModel/vtkPolyDataInternals.h
+Common/DataModel/vtkPolyDataMaterial.h
 Common/DataModel/vtkPolyLine.h
 Common/DataModel/vtkPolyPlane.h
 Common/DataModel/vtkPolyVertex.h
@@ -467,6 +471,7 @@ Common/ExecutionModel/vtkArrayDataAlgorithm.h
 Common/ExecutionModel/vtkCachedStreamingDemandDrivenPipeline.h
 Common/ExecutionModel/vtkCastToConcrete.h
 Common/ExecutionModel/vtkCellGridAlgorithm.h
+Common/ExecutionModel/vtkCommonExecutionModelPCH.h
 Common/ExecutionModel/vtkDirectedGraphAlgorithm.h
 Common/ExecutionModel/vtkEndFor.h
 Common/ExecutionModel/vtkEnsembleSource.h
@@ -536,9 +541,14 @@ Common/Transforms/vtkThinPlateSplineTransform.h
 Common/Transforms/vtkTransformCollection.h
 Common/Transforms/vtkWarpTransform.h
 Filters/Core/vtk3DLinearGridInternal.h
+Filters/Core/vtkFiltersCorePCH.h
 Filters/Core/vtkHyperTreeGridProbeFilterUtilities.h
 Filters/Core/vtkThresholdScalars.h
+Filters/Core/vtkVoronoi2D.h
 Filters/Meshing/vtkAnnularBinIterator.h
+Filters/Meshing/vtkFillPointCloud.h
+Filters/Meshing/vtkJogglePoints.h
+Filters/Meshing/vtkLabeledImagePointSampler.h
 Filters/Meshing/vtkShellBinIterator.h
 Filters/Meshing/vtkVoronoiCore.h
 Filters/Meshing/vtkVoronoiCore2D.h
@@ -562,6 +572,7 @@ Imaging/Core/vtkImageAppendComponents.h
 Imaging/Core/vtkImageBSplineCoefficients.h
 Imaging/Core/vtkImageBSplineInternals.h
 Imaging/Core/vtkImageBSplineInterpolator.h
+Imaging/Core/vtkImageBinaryThreshold.h
 Imaging/Core/vtkImageBlend.h
 Imaging/Core/vtkImageCacheFilter.h
 Imaging/Core/vtkImageCast.h
@@ -710,7 +721,6 @@ Rendering/Core/vtkGraphicsFactory.h
 Rendering/Core/vtkHardwareSelector.h
 Rendering/Core/vtkHierarchicalPolyDataMapper.h
 Rendering/Core/vtkInteractorEventRecorder.h
-Rendering/Core/vtkInteractorStyle3D.h
 Rendering/Core/vtkLODProp3D.h
 Rendering/Core/vtkLabeledDatatypeDefinitions.h
 Rendering/Core/vtkLightKit.h
@@ -726,10 +736,10 @@ Rendering/Core/vtkRenderState.h
 Rendering/Core/vtkRenderTimerLog.h
 Rendering/Core/vtkRenderWidget.h
 Rendering/Core/vtkRenderWindowCollection.h
-Rendering/Core/vtkRenderWindowInteractor3D.h
 Rendering/Core/vtkRendererDelegate.h
 Rendering/Core/vtkRendererSource.h
 Rendering/Core/vtkRenderingCoreEnums.h
+Rendering/Core/vtkRenderingCorePCH.h
 Rendering/Core/vtkResizingWindowToImageFilter.h
 Rendering/Core/vtkScenePicker.h
 Rendering/Core/vtkSelectVisiblePoints.h
@@ -834,6 +844,7 @@ Rendering/UI/vtkAndroidRenderWindowInteractor.h
 Rendering/UI/vtkCocoaAutoreleasePool.h
 Rendering/UI/vtkCocoaMacOSXSDKCompatibility.h
 Rendering/UI/vtkIOSRenderWindowInteractor.h
+Rendering/UI/vtkWaylandHardwareWindow.h
 Rendering/Volume/vtkAnariVolumeInterface.h
 Rendering/Volume/vtkBlockSortHelper.h
 Rendering/Volume/vtkDirectionEncoder.h
@@ -891,6 +902,8 @@ Rendering/WebGPU/vtkWebGPUComputeTexture.h
 Rendering/WebGPU/vtkWebGPUComputeTextureView.h
 Rendering/WebGPU/vtkWebGPUHelpers.h
 Rendering/WebGPU/vtkWebGPURenderTextureDeviceResource.h
+Rendering/WebXR/vtkWebXR.h
+Rendering/WebXR/vtkWebXRUtilities.h
 Views/Infovis/vtkApplyColors.h
 Views/Infovis/vtkApplyIcons.h
 Views/Infovis/vtkGraphItem.h

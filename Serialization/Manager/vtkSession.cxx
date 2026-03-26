@@ -15,6 +15,10 @@
 #include "vtkRenderer.h"
 #endif
 
+#if VTK_MODULE_ENABLE_VTK_RenderingWebXR
+#include "vtkWebXRRenderWindowInteractor.h"
+#endif
+
 #include <map>
 #include <set>
 #include <string>
@@ -360,6 +364,36 @@ extern "C"
 #else
     (void)objectImpl;
     vtkLog(ERROR, << "VTK_RenderingCore module is not enabled. Cannot reset camera.");
+    return vtkSessionResultFailure;
+#endif
+  }
+
+  //-------------------------------------------------------------------------------
+  vtkSessionResult vtkSessionStartWebXR([[maybe_unused]] vtkTypeUInt8 mode,
+    [[maybe_unused]] vtkTypeUInt32 requiredFeatures,
+    [[maybe_unused]] vtkTypeUInt32 optionalFeatures)
+  {
+#if VTK_MODULE_ENABLE_VTK_RenderingWebXR
+    vtkWebXRRenderWindowInteractor::StartXR(
+      static_cast<vtkWebXRRenderWindowInteractor::SessionMode>(mode), requiredFeatures,
+      optionalFeatures);
+    return vtkSessionResultSuccess;
+#else
+    vtkLog(ERROR,
+      << "WebXR not supported. Please compile vtk with -DVTK_MODULE_ENABLE_VTK_RenderingWebXR=YES");
+    return vtkSessionResultFailure;
+#endif
+  }
+
+  //-------------------------------------------------------------------------------
+  vtkSessionResult vtkSessionStopWebXR()
+  {
+#if VTK_MODULE_ENABLE_VTK_RenderingWebXR
+    vtkWebXRRenderWindowInteractor::StopXR();
+    return vtkSessionResultSuccess;
+#else
+    vtkLog(ERROR,
+      << "WebXR not supported. Please compile vtk with -DVTK_MODULE_ENABLE_VTK_RenderingWebXR=YES");
     return vtkSessionResultFailure;
 #endif
   }
