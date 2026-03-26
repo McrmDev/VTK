@@ -928,7 +928,7 @@ void vtkXMLHyperTreeGridReader::ReadTrees_2(vtkXMLDataElement* element)
     {
       totalNumberOfVertices += *numberOfVerticesPerDepthIterator;
     }
-    while (depth < depthPerTree->GetValue(treeId) && ++numberOfVerticesPerDepthIterator)
+    while (depth < depthPerTree->GetValue(treeId) && *numberOfVerticesPerDepthIterator++)
     {
       ++depth;
     }
