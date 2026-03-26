@@ -2,6 +2,7 @@
 to VTK datasets. See examples at bottom.
 """
 
+import sys
 from contextlib import suppress
 from vtkmodules.vtkCommonCore import vtkPoints, vtkAbstractArray, vtkDataArray
 from vtkmodules.vtkCommonDataModel import (
@@ -243,6 +244,79 @@ class FieldDataBase(object):
     def __len__(self):
         return self.GetNumberOfArrays()
 
+    def to_pandas(self):
+        """Convert to a :class:`pandas.DataFrame`.
+
+        Single-component arrays become columns directly.
+        Multi-component arrays are split into columns named
+        ``name_0``, ``name_1``, etc.
+        """
+        pd = sys.modules.get("pandas", None)
+        if pd is None:
+            raise RuntimeError("You must import pandas before calling to_pandas().")
+
+        data = {}
+        for name, arr in self.items():
+            if not isinstance(arr, vtkDataArray):
+                continue
+            np_arr = numpy.asarray(arr)
+            ncomp = arr.GetNumberOfComponents()
+            if ncomp == 1 or np_arr.ndim == 1:
+                data[name] = np_arr.ravel()
+            else:
+                for j in range(ncomp):
+                    data[f"{name}_{j}"] = np_arr[:, j]
+        return pd.DataFrame(data)
+
+    def from_pandas(self, df):
+        """Populate from a :class:`pandas.DataFrame`.
+
+        Each column becomes a single-component array.
+        Existing arrays are removed first.
+        """
+        if "pandas" not in sys.modules:
+            raise RuntimeError("You must import pandas before calling from_pandas().")
+
+        self.Initialize()
+        for name in df.columns:
+            self.set_array(str(name), df[name].to_numpy())
+
+    def to_xarray(self):
+        """Convert to an :class:`xarray.Dataset`.
+
+        Single-component arrays get dimension ``("index",)``.
+        Multi-component arrays get dimensions
+        ``("index", "component")``.
+        """
+        xr = sys.modules.get("xarray", None)
+        if xr is None:
+            raise RuntimeError("You must import xarray before calling to_xarray().")
+
+        data_vars = {}
+        for name, arr in self.items():
+            if not isinstance(arr, vtkDataArray):
+                continue
+            np_arr = numpy.asarray(arr)
+            ncomp = arr.GetNumberOfComponents()
+            if ncomp == 1 or np_arr.ndim == 1:
+                data_vars[name] = ("index", np_arr.ravel())
+            else:
+                data_vars[name] = (("index", "component"), np_arr)
+        return xr.Dataset(data_vars)
+
+    def from_xarray(self, ds):
+        """Populate from an :class:`xarray.Dataset`.
+
+        Each variable becomes an array.
+        Existing arrays are removed first.
+        """
+        if "xarray" not in sys.modules:
+            raise RuntimeError("You must import xarray before calling from_xarray().")
+
+        self.Initialize()
+        for name in ds.data_vars:
+            self.set_array(str(name), ds[name].values)
+
 @vtkFieldData.override
 class FieldData(FieldDataBase, vtkFieldData):
     pass
@@ -468,12 +542,36 @@ class DataSet(object):
         pd.association = self.POINT
         return pd
 
+    @point_data.setter
+    def point_data(self, arrays):
+        """Set point arrays from a dict of ``{name: array}``.
+
+        Each value can be a numpy array or a VTK data array.
+        Existing point arrays are removed first.
+        """
+        pd = self.point_data
+        pd.Initialize()
+        for name, arr in arrays.items():
+            pd.set_array(name, arr)
+
     @property
     def cell_data(self):
         cd = super().GetCellData()
         cd.dataset = self
         cd.association = self.CELL
         return cd
+
+    @cell_data.setter
+    def cell_data(self, arrays):
+        """Set cell arrays from a dict of ``{name: array}``.
+
+        Each value can be a numpy array or a VTK data array.
+        Existing cell arrays are removed first.
+        """
+        cd = self.cell_data
+        cd.Initialize()
+        for name, arr in arrays.items():
+            cd.set_array(name, arr)
 
     @property
     def field_data(self):
@@ -482,6 +580,18 @@ class DataSet(object):
             fd.dataset = self
             fd.association = self.FIELD
         return fd
+
+    @field_data.setter
+    def field_data(self, arrays):
+        """Set field arrays from a dict of ``{name: array}``.
+
+        Each value can be a numpy array or a VTK data array.
+        Existing field arrays are removed first.
+        """
+        fd = self.field_data
+        fd.Initialize()
+        for name, arr in arrays.items():
+            fd.set_array(name, arr)
 
     def __eq__(self, other: object) -> bool:
         """Test equivalency between data objects."""
