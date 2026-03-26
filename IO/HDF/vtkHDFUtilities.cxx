@@ -594,7 +594,7 @@ bool vtkHDFUtilities::Open(vtkMemoryResourceStream* stream, hid_t& fileImageID, 
   }
 
   ::ScopedH5EQuiet quietHandle;
-  fileImageID = H5LTopen_file_image((void*)(stream->GetBuffer()), stream->GetSize(),
+  fileImageID = H5LTopen_file_image(const_cast<void*>(stream->GetBuffer()), stream->GetSize(),
     H5LT_FILE_IMAGE_DONT_COPY | H5LT_FILE_IMAGE_DONT_RELEASE);
   if (fileImageID < 0)
   {
