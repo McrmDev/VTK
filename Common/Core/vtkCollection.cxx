@@ -19,13 +19,6 @@ VTK_ABI_NAMESPACE_BEGIN
 vtkStandardNewMacro(vtkCollection);
 
 //------------------------------------------------------------------------------
-// Construct with empty list.
-vtkCollection::vtkCollection()
-{
-  this->Current = this->Objects.end();
-}
-
-//------------------------------------------------------------------------------
 // Destructor for the vtkCollection class. This removes all
 // objects from the collection.
 vtkCollection::~vtkCollection()
@@ -79,7 +72,8 @@ void vtkCollection::RemoveItem(vtkObject* a)
   auto it = std::find(this->Objects.begin(), this->Objects.end(), a);
   if (it != this->Objects.end())
   {
-    if (it < this->Current)
+    size_t foundOffset = static_cast<size_t>(it - this->Objects.begin());
+    if (foundOffset < this->Current)
     {
       this->Current--;
     }
@@ -107,7 +101,7 @@ void vtkCollection::RemoveAllItems()
     }
   }
   this->Objects.clear();
-  this->Current = this->Objects.end();
+  this->Current = 0;
   this->Modified();
 }
 
@@ -202,7 +196,7 @@ void vtkCollection::RemoveItem(int i)
     return;
   }
 
-  if (this->Objects.begin() + i < this->Current)
+  if (idx < this->Current)
   {
     this->Current--;
   }
