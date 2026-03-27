@@ -156,6 +156,7 @@ set(python_files
   vtkmodules/tk/vtkTkRenderWindowInteractor.py
   vtkmodules/util/__init__.py
   vtkmodules/util/colors.py
+  vtkmodules/util/data_array_selection.py
   vtkmodules/util/data_model.py
   vtkmodules/util/execution_model.py
   vtkmodules/util/functions.py
