@@ -68,12 +68,16 @@ static vtkMultiThreaderIDType vtkGarbageCollectorMainThread;
 // This mutex is used to coordinate between weak pointer upgrades and garbage
 // collection traversings its graph. The reference count cannot change while
 // the graph traversal is happening so that the bookkeeping of the traversal
-// algorithm is accurate.
-static std::mutex* vtkGarbageCollectorWeakPtrMutex = nullptr;
+// algorithm is accurate.  This must be default initialized to 0 by the
+// compiler and is therefore not initialized here.  The ClassInitialize and
+// ClassFinalize methods handle it.
+static std::mutex* vtkGarbageCollectorWeakPtrMutex;
 
 //------------------------------------------------------------------------------
-// This mutex is used to coordinate with weak pointers
-static std::recursive_mutex* vtkGarbageCollectorCollectionMutex = nullptr;
+// This mutex is used to coordinate with weak pointers.  This must be default
+// initialized to 0 by the compiler and is therefore not initialized here.  The
+// ClassInitialize and ClassFinalize methods handle it.
+static std::recursive_mutex* vtkGarbageCollectorCollectionMutex;
 
 //------------------------------------------------------------------------------
 vtkGarbageCollector::vtkGarbageCollector() = default;
