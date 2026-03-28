@@ -146,6 +146,8 @@ extern "C"
   void vtkDestroyTimer(int timerId, bool isOneShot);
   int* vtkGetParentElementBoundingRectSize(const char* selector);
   void vtkInitializeCanvasElement(const char* selector, bool applyStyle);
+  void vtkStartEventLoopSync(vtkEventProcessingFunc spinOnceAndGetDone,
+    vtkUnRegisterInteractorFunc unRegisterInteractor, void* arg);
   void vtkStartEventLoopAsync(vtkEventProcessingFunc spinOnceAndGetDone,
     vtkUnRegisterInteractorFunc unRegisterInteractor, void* arg);
 }

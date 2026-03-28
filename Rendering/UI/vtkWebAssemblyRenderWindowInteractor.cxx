@@ -46,14 +46,6 @@ int EmscriptenMouseButtonDblClickEventMap[3] = { vtkCommand::LeftButtonDoubleCli
   vtkCommand::MiddleButtonDoubleClickEvent, vtkCommand::RightButtonDoubleClickEvent };
 
 //------------------------------------------------------------------------------
-void spinOnce(void* arg)
-{
-  vtkWebAssemblyRenderWindowInteractor* iren =
-    static_cast<vtkWebAssemblyRenderWindowInteractor*>(arg);
-  iren->ProcessEvents();
-}
-
-//------------------------------------------------------------------------------
 bool spinOnceAndGetDone(void* arg)
 {
   vtkWebAssemblyRenderWindowInteractor* iren =
@@ -637,9 +629,13 @@ void vtkWebAssemblyRenderWindowInteractor::StartEventLoop()
       if (vtkRenderWindowInteractor::InteractorManagesTheEventLoop)
       {
         this->Register(nullptr);
+        vtkStartEventLoopSync(
+          &spinOnceAndGetDone, &unRegisterInteractor, reinterpret_cast<void*>(this));
       }
-      emscripten_set_main_loop_arg(
-        &spinOnce, (void*)this, 0, vtkRenderWindowInteractor::InteractorManagesTheEventLoop);
+      else
+      {
+        vtkStartEventLoopSync(&spinOnceAndGetDone, nullptr, reinterpret_cast<void*>(this));
+      }
     }
   }
 }
@@ -656,11 +652,6 @@ void vtkWebAssemblyRenderWindowInteractor::TerminateApp(void)
   // Only post a quit message if Start was called...
   if (internals.StartedMessageLoop)
   {
-    if (!emscripten_has_asyncify())
-    {
-      // If we are not using asyncify, we need to stop the main loop.
-      emscripten_cancel_main_loop();
-    }
     internals.StartedMessageLoop = false;
   }
   internals.ExpandedCanvasToContainerElement = false;
