@@ -251,20 +251,34 @@ int vtkAppendPolyData::ExecuteAppend(vtkPolyData* output, vtkPolyData* inputs[],
   {
     pointFieldList.IntersectFieldList(dataset->GetPointData());
   }
-  outputPD->CopyAllocate(pointFieldList, totalNumberOfPoints);
-  outputPD->SetNumberOfTuples(totalNumberOfPoints);
-  vtkSMPTools::For(0, static_cast<vtkIdType>(datasets.size()),
-    [&](vtkIdType begin, vtkIdType end)
+  if (this->UseImplicitArray)
+  {
+    std::vector<vtkFieldData*> pointDataList;
+    pointDataList.resize(datasets.size());
+    for (std::size_t i = 0; i < datasets.size(); ++i)
     {
-      for (vtkIdType idx = begin; idx < end; ++idx)
+      pointDataList[i] = datasets[i]->GetPointData();
+    }
+    pointFieldList.GenerateCompositeArray(pointDataList, outputPD);
+  }
+  else
+  {
+    outputPD->CopyAllocate(pointFieldList, totalNumberOfPoints);
+    outputPD->SetNumberOfTuples(totalNumberOfPoints);
+    vtkSMPTools::For(0, static_cast<vtkIdType>(datasets.size()),
+      [&](vtkIdType begin, vtkIdType end)
       {
-        auto& dataset = datasets[idx];
-        const auto& pointOffset = pointOffsets[idx];
-        auto inputPD = dataset->GetPointData();
-        const auto numberOfInputTuples = inputPD->GetNumberOfTuples();
-        pointFieldList.CopyData(idx, inputPD, 0, numberOfInputTuples, outputPD, pointOffset);
-      }
-    });
+        for (vtkIdType idx = begin; idx < end; ++idx)
+        {
+          auto& dataset = datasets[idx];
+          const auto& pointOffset = pointOffsets[idx];
+          auto inputPD = dataset->GetPointData();
+          const auto numberOfInputTuples = inputPD->GetNumberOfTuples();
+          pointFieldList.CopyData(idx, inputPD, 0, numberOfInputTuples, outputPD, pointOffset);
+        }
+      });
+  }
+
   this->UpdateProgress(0.50);
   if (this->CheckAbort())
   {
@@ -382,44 +396,60 @@ int vtkAppendPolyData::ExecuteAppend(vtkPolyData* output, vtkPolyData* inputs[],
   {
     cellFieldList.IntersectFieldList(dataset->GetCellData());
   }
-  outputCD->CopyAllocate(cellFieldList, totalNumberOfCells);
-  outputCD->SetNumberOfTuples(totalNumberOfCells);
-  // copy arrays.
-  vtkSMPTools::For(0, static_cast<vtkIdType>(datasets.size()),
-    [&](vtkIdType begin, vtkIdType end)
+
+  if (this->UseImplicitArray)
+  {
+    std::vector<vtkFieldData*> cellDataList;
+    cellDataList.resize(datasets.size());
+    for (std::size_t i = 0; i < datasets.size(); ++i)
     {
-      for (vtkIdType idx = begin; idx < end; ++idx)
+      cellDataList[i] = datasets[i]->GetCellData();
+    }
+    cellFieldList.GenerateCompositeArray(cellDataList, outputCD);
+  }
+  else
+  {
+    outputCD->CopyAllocate(cellFieldList, totalNumberOfCells);
+    outputCD->SetNumberOfTuples(totalNumberOfCells);
+    // copy arrays.
+    vtkSMPTools::For(0, static_cast<vtkIdType>(datasets.size()),
+      [&](vtkIdType begin, vtkIdType end)
       {
-        auto& dataset = datasets[idx];
-        const auto outVertOffset = vertOffsets[idx];
-        const auto outLineOffset = lineOffsets[idx] + totalNumberOfVerts;
-        const auto outPolyOffset = polyOffsets[idx] + totalNumberOfLines + totalNumberOfVerts;
-        const auto outStripOffset =
-          stripOffsets[idx] + totalNumberOfPolys + totalNumberOfLines + totalNumberOfVerts;
-        auto inputCD = dataset->GetCellData();
-        if (auto numVerts = dataset->GetNumberOfVerts())
+        for (vtkIdType idx = begin; idx < end; ++idx)
         {
-          constexpr vtkIdType inVertOffset = 0;
-          cellFieldList.CopyData(idx, inputCD, inVertOffset, numVerts, outputCD, outVertOffset);
+          auto& dataset = datasets[idx];
+          const auto outVertOffset = vertOffsets[idx];
+          const auto outLineOffset = lineOffsets[idx] + totalNumberOfVerts;
+          const auto outPolyOffset = polyOffsets[idx] + totalNumberOfLines + totalNumberOfVerts;
+          const auto outStripOffset =
+            stripOffsets[idx] + totalNumberOfPolys + totalNumberOfLines + totalNumberOfVerts;
+          auto inputCD = dataset->GetCellData();
+          if (auto numVerts = dataset->GetNumberOfVerts())
+          {
+            constexpr vtkIdType inVertOffset = 0;
+            cellFieldList.CopyData(idx, inputCD, inVertOffset, numVerts, outputCD, outVertOffset);
+          }
+          if (auto numLines = dataset->GetNumberOfLines())
+          {
+            const vtkIdType inLineOffset = dataset->GetNumberOfVerts();
+            cellFieldList.CopyData(idx, inputCD, inLineOffset, numLines, outputCD, outLineOffset);
+          }
+          if (auto numPolys = dataset->GetNumberOfPolys())
+          {
+            const vtkIdType inPolyOffset =
+              dataset->GetNumberOfLines() + dataset->GetNumberOfVerts();
+            cellFieldList.CopyData(idx, inputCD, inPolyOffset, numPolys, outputCD, outPolyOffset);
+          }
+          if (auto numStrips = dataset->GetNumberOfStrips())
+          {
+            const vtkIdType inStripOffset = dataset->GetNumberOfPolys() +
+              dataset->GetNumberOfLines() + dataset->GetNumberOfVerts();
+            cellFieldList.CopyData(
+              idx, inputCD, inStripOffset, numStrips, outputCD, outStripOffset);
+          }
         }
-        if (auto numLines = dataset->GetNumberOfLines())
-        {
-          const vtkIdType inLineOffset = dataset->GetNumberOfVerts();
-          cellFieldList.CopyData(idx, inputCD, inLineOffset, numLines, outputCD, outLineOffset);
-        }
-        if (auto numPolys = dataset->GetNumberOfPolys())
-        {
-          const vtkIdType inPolyOffset = dataset->GetNumberOfLines() + dataset->GetNumberOfVerts();
-          cellFieldList.CopyData(idx, inputCD, inPolyOffset, numPolys, outputCD, outPolyOffset);
-        }
-        if (auto numStrips = dataset->GetNumberOfStrips())
-        {
-          const vtkIdType inStripOffset =
-            dataset->GetNumberOfPolys() + dataset->GetNumberOfLines() + dataset->GetNumberOfVerts();
-          cellFieldList.CopyData(idx, inputCD, inStripOffset, numStrips, outputCD, outStripOffset);
-        }
-      }
-    });
+      });
+  }
   this->UpdateProgress(1.0);
 
   return 1;
