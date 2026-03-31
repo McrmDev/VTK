@@ -32,6 +32,7 @@
 #ifndef vtkNew_h
 #define vtkNew_h
 
+#include "vtkGarbageCollectorManager.h" // Ensure GC infra is initialized
 #include "vtkIOStream.h"
 #include "vtkMeta.h" // for IsComplete
 

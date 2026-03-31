@@ -126,6 +126,7 @@ vtk_add_test_cxx(vtkCommonCoreCxxTests tests
   TestFMT.cxx
   TestGarbageCollector.cxx
   TestGenericDataArrayAPI.cxx
+  TestGlobalStaticvtkObject.cxx
   TestInformationKeyLookup.cxx
   TestInherits.cxx
   TestLogger.cxx
