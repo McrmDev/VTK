@@ -14,6 +14,7 @@ if (TARGET VTK::ParallelMPI)
     DistributedData.cxx
     DistributedDataRenderPass.cxx
     PTextureMapToSphere.cxx
+    TestPHyperTreeGridGradient.cxx,NO_VALID
     TestPHyperTreeGridProbeFilter.cxx
     TestPExtractDataArraysOverTime.cxx,NO_VALID
     TestPartitionBalancer.cxx,NO_VALID
