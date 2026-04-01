@@ -89,6 +89,7 @@ struct GradientWorker
   vtkDataArray* InArray;
   // output gradient
   vtkDoubleArray* OutArray;
+  vtkUnsignedCharArray* GhostArray = nullptr;
   // apply extensive ratio
   bool ExtensiveComputation = false;
   // internal storage
@@ -99,12 +100,20 @@ struct GradientWorker
   vtkVoxel* Voxel;
 
   //----------------------------------------------------------------------------
-  GradientWorker(vtkDataArray* input, vtkDoubleArray* output, bool extensive)
+  GradientWorker(
+    vtkDataArray* input, vtkDoubleArray* output, bool extensive, vtkUnsignedCharArray* ghosts)
     : InArray{ input }
     , OutArray{ output }
+    , GhostArray{ ghosts }
     , ExtensiveComputation{ extensive }
   {
     this->OutArray->Fill(0);
+  }
+
+  //----------------------------------------------------------------------------
+  bool IsGhost(vtkIdType id) const
+  {
+    return this->GhostArray && (this->GhostArray->GetTypedComponent(id, 0) > 0);
   }
 
   //----------------------------------------------------------------------------
@@ -158,19 +167,25 @@ struct GradientWorker
     // This part is not THREAD SAFE
     std::vector<double> gradArrTuple(nbComp * 3);
     // id contribution
-    this->OutArray->GetTypedTuple(id, gradArrTuple.data());
-    for (int elt = 0; elt < nbComp * 3; elt++)
+    if (!IsGhost(id))
     {
-      gradArrTuple[elt] += grad[elt];
+      this->OutArray->GetTypedTuple(id, gradArrTuple.data());
+      for (int elt = 0; elt < nbComp * 3; elt++)
+      {
+        gradArrTuple[elt] += grad[elt];
+      }
+      this->OutArray->SetTypedTuple(id, gradArrTuple.data());
     }
-    this->OutArray->SetTypedTuple(id, gradArrTuple.data());
     // idN contribution
-    this->OutArray->GetTypedTuple(idN, gradArrTuple.data());
-    for (int elt = 0; elt < nbComp * 3; elt++)
+    if (!IsGhost(idN))
     {
-      gradArrTuple[elt] += grad[elt];
+      this->OutArray->GetTypedTuple(idN, gradArrTuple.data());
+      for (int elt = 0; elt < nbComp * 3; elt++)
+      {
+        gradArrTuple[elt] += grad[elt];
+      }
+      this->OutArray->SetTuple(idN, gradArrTuple.data());
     }
-    this->OutArray->SetTuple(idN, gradArrTuple.data());
   }
 
   //----------------------------------------------------------------------------
@@ -458,7 +473,8 @@ int vtkHyperTreeGridGradient::ProcessTrees(vtkHyperTreeGrid* input, vtkDataObjec
   this->OutGradArray->SetName(this->GradientArrayName);
   this->OutGradArray->SetNumberOfComponents(this->InArray->GetNumberOfComponents() * 3);
   this->OutGradArray->SetNumberOfTuples(this->InArray->GetNumberOfTuples());
-  GradientWorker gradientWorker(this->InArray, this->OutGradArray, this->ExtensiveComputation);
+  GradientWorker gradientWorker(
+    this->InArray, this->OutGradArray, this->ExtensiveComputation, this->InGhostArray);
 
   // Gradient computation
 
@@ -569,10 +585,6 @@ void vtkHyperTreeGridGradient::RecursivelyProcessGradientTree(Cursor* supercurso
   // Retrieve global index of input cursor
   vtkIdType id = supercursor->GetGlobalNodeIndex();
 
-  if (this->InGhostArray && this->InGhostArray->GetTuple1(id))
-  {
-    return;
-  }
   if (supercursor->IsMasked())
   {
     return;
