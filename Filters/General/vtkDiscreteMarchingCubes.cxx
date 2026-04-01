@@ -9,10 +9,11 @@
 #include "vtkDataArrayRange.h"
 #include "vtkDoubleArray.h"
 #include "vtkFloatArray.h"
+#include "vtkHexahedron.h"
 #include "vtkImageTransform.h"
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
-#include "vtkMarchingCubesTriangleCases.h"
+#include "vtkMarchingCellsContourCases.h"
 #include "vtkMath.h"
 #include "vtkMergePoints.h"
 #include "vtkObjectFactory.h"
@@ -59,22 +60,17 @@ struct vtkDiscreteMarchingCubesComputeGradientFunctor
     int i, j, k, pts[8][3], xp, yp, zp, *x1, *x2;
     vtkIdType sliceSize, rowSize;
     static const int CASE_MASK[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
-    vtkMarchingCubesTriangleCases *triCase, *triCases;
-    int* edge;
-    int contNum, ii, index, *vert;
+    int contNum, ii, index;
     vtkIdType jOffset, kOffset, idx;
     vtkIdType ptIds[3];
     int extent[6];
     vtkTypeBool ComputeScalars = newCellScalars != nullptr;
     int ComputeAdjacentScalars = newPointScalars != nullptr;
     double t, x[3], min, max;
-    static int edges[12][2] = { { 0, 1 }, { 1, 2 }, { 3, 2 }, { 0, 3 }, { 4, 5 }, { 5, 6 },
-      { 7, 6 }, { 4, 7 }, { 0, 4 }, { 1, 5 }, { 3, 7 }, { 2, 6 } };
 
     vtkInformation* inInfo = self->GetExecutive()->GetInputInformation(0, 0);
     inInfo->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), extent);
 
-    triCases = vtkMarchingCubesTriangleCases::GetCases();
     auto scalars = vtk::DataArrayValueRange<TupleSize>(scalarArray).begin();
 
     //
@@ -181,14 +177,13 @@ struct vtkDiscreteMarchingCubesComputeGradientFunctor
               continue;
             }
 
-            triCase = triCases + index;
-            edge = triCase->edges;
+            const int* edge = vtkMarchingCellsContourCases::GetHexahedronCase(index);
 
             for (; edge[0] > -1; edge += 3)
             {
               for (ii = 0; ii < 3; ii++) // insert triangle
               {
-                vert = edges[edge[ii]];
+                const vtkIdType* vert = vtkHexahedron::GetEdgeArray(edge[ii]);
                 // for discrete marching cubes, the interpolation point
                 // is always 0.5.
                 t = 0.5;

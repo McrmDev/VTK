@@ -400,8 +400,19 @@ int vtkClipDataSet::RequestData(vtkInformation* vtkNotUsed(request),
           // NOLINTNEXTLINE(readability-avoid-nested-conditional-operator)
           return (nPts == 3 ? VTK_TRIANGLE : (nPts == 4 ? VTK_QUAD : VTK_POLYGON));
 
-        case 3: // tetrahedra or wedges are generated------------------
-          return (nPts == 4 ? VTK_TETRA : VTK_WEDGE);
+        case 3: // tetrahedra/pyramids/wedges/hexes------------------
+          switch (nPts)
+          {
+            case 4:
+              return VTK_TETRA;
+            case 5:
+              return VTK_PYRAMID;
+            case 6:
+              return VTK_WEDGE;
+            default:
+            case 8:
+              return VTK_HEXAHEDRON;
+          }
 
         default:
           vtkErrorWithObjectMacro(nullptr, "Dimension cannot be lower than 0 or higher than 3");

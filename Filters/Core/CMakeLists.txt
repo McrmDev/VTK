@@ -139,9 +139,6 @@ set(classes
 set(headers
   vtkDecimatePolylineStrategy.h)
 
-set(private_headers
-  vtk3DLinearGridInternal.h)
-
 vtk_module_add_module(VTK::FiltersCore
   CLASSES ${classes}
   HEADERS ${headers}

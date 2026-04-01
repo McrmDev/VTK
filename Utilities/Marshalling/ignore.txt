@@ -540,7 +540,6 @@ Common/Transforms/vtkSphericalTransform.h
 Common/Transforms/vtkThinPlateSplineTransform.h
 Common/Transforms/vtkTransformCollection.h
 Common/Transforms/vtkWarpTransform.h
-Filters/Core/vtk3DLinearGridInternal.h
 Filters/Core/vtkFiltersCorePCH.h
 Filters/Core/vtkHyperTreeGridProbeFilterUtilities.h
 Filters/Core/vtkThresholdScalars.h
