@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "vtkCellData.h"
-#include "vtkFloatArray.h"
 #include "vtkHyperTreeGrid.h"
 #include "vtkHyperTreeGridGradient.h"
 #include "vtkMathUtilities.h"
