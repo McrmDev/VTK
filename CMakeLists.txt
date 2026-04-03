@@ -839,8 +839,7 @@ if (VTK_BUILD_TESTING)
       target_link_options(vtkWebAssemblyTestLinkOptions INTERFACE
         # Keep Debug builds debuggable without shipping giant in-wasm DWARF sections.
         "$<$<CONFIG:Debug>:-gseparate-dwarf>"
-        # we need emscripten to emit code that handles exit code and atexit(s)
-        "-sEXIT_RUNTIME=1"
+        "$<$<CONFIG:RelWithDebInfo>:-gseparate-dwarf>"
         # ENV holds the environment variables accessible by C getenv
         "-sEXPORTED_RUNTIME_METHODS=['ENV']"
         # tests dynamically allocate memory, can easily go over the preset limit.

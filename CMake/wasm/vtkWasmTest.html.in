@@ -105,7 +105,11 @@
           lockCanvasSize(vtkWasmRuntime);
         }
       },
-      onExit: finalize,
+      postRun: () => {
+        if (vtkWasmRuntime !== null && EXITSTATUS !== undefined) {
+          finalize(EXITSTATUS);
+        }
+      },
       arguments: "@test_args@".split(";") // Comes in as a stringified cmake list
     };
   </script>
