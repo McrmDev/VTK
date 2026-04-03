@@ -1812,8 +1812,7 @@ vtkIOSSReaderInternal::CombineTopologies(
         const int cell_type = block.first;
         const auto cellarray = block.second;
         appendedCellArray->Append(cellarray);
-        ptr =
-          std::fill_n(ptr, block.second->GetNumberOfCells(), static_cast<unsigned char>(cell_type));
+        std::fill_n(ptr, block.second->GetNumberOfCells(), static_cast<unsigned char>(cell_type));
         ptr += block.second->GetNumberOfCells();
       }
       return { cellTypesArray, appendedCellArray };
